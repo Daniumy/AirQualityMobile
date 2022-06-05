@@ -1,0 +1,55 @@
+{
+    "puntos" : [
+        {
+            "latitud" : 37.999957,
+            "longitud" : -1.144434,
+            "ireca" : 0.36,
+            "dir" : "Avenida Ciclista Mariano"
+        },{
+            "latitud" : 37.974525,
+            "longitud" : -1.151442,
+            "ireca" : 1.45,
+            "dir" : "Avenida Ciudad de Almeria"
+        },{
+            "latitud" : 38.004452,
+            "longitud" : -1.119682,
+            "ireca" : 0.33,
+            "dir" : "Avenida de Zarandona"
+        },{
+            "latitud" : 37.974196,
+            "longitud" : -1.134879,
+            "ireca" : 0.52,
+            "dir" : "Avenida del Palmar"
+        },{
+            "latitud" : 37.998784,
+            "longitud" : -1.136765,
+            "ireca" : 0.62,
+            "dir" : "Avenida Juan Carlos I"
+        },{
+            "latitud" : 37.999704,
+            "longitud" : -1.133146,
+            "ireca" : 0.43,
+            "dir" : "Avenida Marques de los Velez"
+        },{
+            "latitud" : 37.999950,
+            "longitud" : -1.137071,
+            "ireca" : 0.19,
+            "dir" : "Avenida Principe de Asturias"
+        },{
+            "latitud" : 38.002752,
+            "longitud" : -1.129393,
+            "ireca" : 0.22,
+            "dir" : "Avenida Principe de Asturias"
+        },{
+            "latitud" : 38.010974,
+            "longitud" : -1.131550,
+            "ireca" : 0.22,
+            "dir" : "Avenida Reino de Murcia"
+        },{
+            "latitud" : 38.008985,
+            "longitud" : -1.135554,
+            "ireca" : 0.11,
+            "dir" : "Carretera de Churra"
+        }
+    ]
+}

@@ -1,0 +1,665 @@
+{
+    "puntos" : [
+        {
+            "latitud" : 37.996804,
+            "longitud" : -1.142827,
+            "factori" : 0.6,
+            "idnodo" : 0,
+            "vecinos" : [1,9,101]
+        },{
+            "latitud" : 37.996512,
+            "longitud" : -1.141213,
+            "factori" : 0.68,
+            "idnodo" : 1,
+            "vecinos" : [0,2,9,10,19,20]
+        },{
+            "latitud" : 37.996591,
+            "longitud" : -1.136561,
+            "factori" : 0.5,
+            "idnodo" : 2,
+            "vecinos" : [1,3,10,11,12]
+        },{
+            "latitud" : 37.996776,
+            "longitud" : -1.134755,
+            "factori" : 0.46,
+            "idnodo" : 3,
+            "vecinos" : [2,4,12]
+        },{
+            "latitud" : 37.996901,
+            "longitud" : -1.131098,
+            "factori" : 0.52,
+            "idnodo" : 4,
+            "vecinos" : [3,5,12,13,14]
+        },{
+            "latitud" : 37.996908,
+            "longitud" : -1.127593,
+            "factori" : 0.55,
+            "idnodo" : 5,
+            "vecinos" : [4,6,13,14,15]
+        },{
+            "latitud" : 37.997307,
+            "longitud" : -1.124529,
+            "factori" : 0.46,
+            "idnodo" : 6,
+            "vecinos" : [5,7,14,15,16]
+        },{
+            "latitud" : 37.997089,
+            "longitud" : -1.120865,
+            "factori" : 0.35,
+            "idnodo" : 7,
+            "vecinos" : [6,8,16,29]
+        },{
+            "latitud" : 37.996855,
+            "longitud" : -1.116839,
+            "factori" : 0.31,
+            "idnodo" : 8,
+            "vecinos" : [7,16,17,29]
+        },{
+            "latitud" : 37.994777,
+            "longitud" : -1.142177,
+            "factori" : 0.76,
+            "idnodo" : 9,
+            "vecinos" : [0,1,10,18,19,101]
+        },{
+            "latitud" : 37.994032,
+            "longitud" : -1.137843,
+            "factori" : 0.66,
+            "idnodo" : 10,
+            "vecinos" : [1,2,9,11,20,21]
+        },{
+            "latitud" : 37.994409,
+            "longitud" : -1.136276,
+            "factori" : 0.6,
+            "idnodo" : 11,
+            "vecinos" : [2,10,12,21]
+        },{
+            "latitud" : 37.995767,
+            "longitud" : -1.133852,
+            "factori" : 0.53,
+            "idnodo" : 12,
+            "vecinos" : [2,3,4,11,13,22,23]
+        },{
+            "latitud" : 37.994428,
+            "longitud" : -1.130176,
+            "factori" : 0.62,
+            "idnodo" : 13,
+            "vecinos" : [4,5,12,14,23,24,25,103]
+        },{
+            "latitud" : 37.995800,
+            "longitud" : -1.127024,
+            "factori" : 0.53,
+            "idnodo" : 14,
+            "vecinos" : [4,5,6,13,15,25]
+        },{
+            "latitud" : 37.994709,
+            "longitud" : -1.125072,
+            "factori" : 0.5,
+            "idnodo" : 15,
+            "vecinos" : [5,6,14,16,25,26,27]
+        },{
+            "latitud" : 37.994185,
+            "longitud" : -1.121180,
+            "factori" : 0.44,
+            "idnodo" : 16,
+            "vecinos" : [6,7,8,15,27,28]
+        },{
+            "latitud" : 37.994269,
+            "longitud" : -1.114696,
+            "factori" : 0.31,
+            "idnodo" : 17,
+            "vecinos" : [8,29,47,48]
+        },{
+            "latitud" : 37.991814,
+            "longitud" : -1.143090,
+            "factori" : 0.7,
+            "idnodo" : 18,
+            "vecinos" : [9,19,30,101]
+        },{
+            "latitud" : 37.993227,
+            "longitud" : -1.141438,
+            "factori" : 0.98,
+            "idnodo" : 19,
+            "vecinos" : [1,9,18,20,31,32,102]
+        },{
+            "latitud" : 37.993068,
+            "longitud" : -1.139334,
+            "factori" : 0.95,
+            "idnodo" : 20,
+            "vecinos" : [1,10,19,21,22,31,32,33,102]
+        },{
+            "latitud" : 37.993694,
+            "longitud" : -1.136617,
+            "factori" : 0.69,
+            "idnodo" : 21,
+            "vecinos" : [10,11,20,22,33]
+        },{
+            "latitud" : 37.992432,
+            "longitud" : -1.133834,
+            "factori" : 0.73,
+            "idnodo" : 22,
+            "vecinos" : [12,20,21,23,34,102]
+        },{
+            "latitud" : 37.991640,
+            "longitud" : -1.130841,
+            "factori" : 0.82,
+            "idnodo" : 23,
+            "vecinos" : [12,13,22,24,34,102]
+        },{
+            "latitud" : 37.992017,
+            "longitud" : -1.128327,
+            "factori" : 0.96,
+            "idnodo" : 24,
+            "vecinos" : [13,23,25,35,36,103]
+        },{
+            "latitud" : 37.993813,
+            "longitud" : -1.126733,
+            "factori" : 0.57,
+            "idnodo" : 25,
+            "vecinos" : [13,14,15,24,26,103]
+        },{
+            "latitud" : 37.993321,
+            "longitud" : -1.124473,
+            "factori" : 0.54,
+            "idnodo" : 26,
+            "vecinos" : [15,25,27,36,103]
+        },{
+            "latitud" : 37.994220,
+            "longitud" : -1.122878,
+            "factori" : 0.47,
+            "idnodo" : 27,
+            "vecinos" : [15,16,26,28,37]
+        },{
+            "latitud" : 37.993634,
+            "longitud" : -1.120767,
+            "factori" : 0.38,
+            "idnodo" : 28,
+            "vecinos" : [16,27,29,38]
+        },{
+            "latitud" : 37.993681,
+            "longitud" : -1.116886,
+            "factori" : 0.34,
+            "idnodo" : 29,
+            "vecinos" : [7,8,17,28,38,47]
+        },{
+            "latitud" : 37.989876,
+            "longitud" : -1.141403,
+            "factori" : 0.53,
+            "idnodo" : 30,
+            "vecinos" : [18,31,39,49]
+        },{
+            "latitud" : 37.990360,
+            "longitud" : -1.140262,
+            "factori" : 0.7,
+            "idnodo" : 31,
+            "vecinos" : [19,20,30,32,40,50]
+        },{
+            "latitud" : 37.990388,
+            "longitud" : -1.137544,
+            "factori" : 0.91,
+            "idnodo" : 32,
+            "vecinos" : [19,20,31,33,40]
+        },{
+            "latitud" : 37.990943,
+            "longitud" : -1.136179,
+            "factori" : 1,
+            "idnodo" : 33,
+            "vecinos" : [20,21,32,34,40,51,102,105]
+        },{
+            "latitud" : 37.990839,
+            "longitud" : -1.131266,
+            "factori" : 0.78,
+            "idnodo" : 34,
+            "vecinos" : [22,23,33,35,41,42,105]
+        },{
+            "latitud" : 37.989785,
+            "longitud" : -1.127464,
+            "factori" : 0.54,
+            "idnodo" : 35,
+            "vecinos" : [24,34,36,42,43,45,103,105]
+        },{
+            "latitud" : 37.991511,
+            "longitud" : -1.123744,
+            "factori" : 0.6,
+            "idnodo" : 36,
+            "vecinos" : [24,26,35,37,103]
+        },{
+            "latitud" : 37.991031,
+            "longitud" : -1.121732,
+            "factori" : 0.63,
+            "idnodo" : 37,
+            "vecinos" : [27,36,38,46,104]
+        },{
+            "latitud" : 37.991707,
+            "longitud" : -1.118431,
+            "factori" : 0.51,
+            "idnodo" : 38,
+            "vecinos" : [28,29,37,47,104]
+        },{
+            "latitud" : 37.988873,
+            "longitud" : -1.140831,
+            "factori" : 0.42,
+            "idnodo" : 39,
+            "vecinos" : [30,40,49,50]
+        },{
+            "latitud" : 37.989118,
+            "longitud" : -1.137205,
+            "factori" : 0.69,
+            "idnodo" : 40,
+            "vecinos" : [31,32,33,39,50,51,105,106]
+        },{
+            "latitud" : 37.987834,
+            "longitud" : -1.132173,
+            "factori" : 0.54,
+            "idnodo" : 41,
+            "vecinos" : [34,42,51,102,105,107]
+        },{
+            "latitud" : 37.987762,
+            "longitud" : -1.129571,
+            "factori" : 0.5,
+            "idnodo" : 42,
+            "vecinos" : [34,35,41,43,52]
+        },{
+            "latitud" : 37.989194,
+            "longitud" : -1.126593,
+            "factori" : 0.4,
+            "idnodo" : 43,
+            "vecinos" : [35,42,44,52,64]
+        },{
+            "latitud" : 37.988750,
+            "longitud" : -1.125053,
+            "factori" : 0.6,
+            "idnodo" : 44,
+            "vecinos" : [43,45,54,103]
+        },{
+            "latitud" : 37.989551,
+            "longitud" : -1.122256,
+            "factori" : 0.76,
+            "idnodo" : 45,
+            "vecinos" : [35,44,46,47,54,56,103]
+        },{
+            "latitud" : 37.990318,
+            "longitud" : -1.122317,
+            "factori" : 0.73,
+            "idnodo" : 46,
+            "vecinos" : [37,45,57]
+        },{
+            "latitud" : 37.989873,
+            "longitud" : -1.117146,
+            "factori" : 0.67,
+            "idnodo" : 47,
+            "vecinos" : [17,29,38,45,48,57,59,104]
+        },{
+            "latitud" : 37.989392,
+            "longitud" : -1.114024,
+            "factori" : 0.49,
+            "idnodo" : 48,
+            "vecinos" : [17,47,59]
+        },{
+            "latitud" : 37.987101,
+            "longitud" : -1.142637,
+            "factori" : 0.43,
+            "idnodo" : 49,
+            "vecinos" : [30,39,50,60,101]
+        },{
+            "latitud" : 37.987685,
+            "longitud" : -1.138366,
+            "factori" : 0.47,
+            "idnodo" : 50,
+            "vecinos" : [31,39,40,49,51,60,61,106]
+        },{
+            "latitud" : 37.987112,
+            "longitud" : -1.133355,
+            "factori" : 0.41,
+            "idnodo" : 51,
+            "vecinos" : [33,40,41,50,52,62,105,106,107]
+        },{
+            "latitud" : 37.987217,
+            "longitud" : -1.128504,
+            "factori" : 0.44,
+            "idnodo" : 52,
+            "vecinos" : [41,43,51,53,63,64,107]
+        },{
+            "latitud" : 37.986707,
+            "longitud" : -1.125423,
+            "factori" : 0.63,
+            "idnodo" : 53,
+            "vecinos" : [52,54,55,63,64]
+        },{
+            "latitud" : 37.987769,
+            "longitud" : -1.124647,
+            "factori" : 0.69,
+            "idnodo" : 54,
+            "vecinos" : [44,45,53,55,56]
+        },{
+            "latitud" : 37.986992,
+            "longitud" : -1.124257,
+            "factori" : 0.66,
+            "idnodo" : 55,
+            "vecinos" : [53,54,56,57,65]
+        },{
+            "latitud" : 37.987919,
+            "longitud" : -1.121597,
+            "factori" : 0.79,
+            "idnodo" : 56,
+            "vecinos" : [45,54,55,57,104]
+        },{
+            "latitud" : 37.987520,
+            "longitud" : -1.119928,
+            "factori" : 0.54,
+            "idnodo" : 57,
+            "vecinos" : [46,47,55,56,58,65,66,72,104]
+        },{
+            "latitud" : 37.987274,
+            "longitud" : -1.118036,
+            "factori" : 0.68,
+            "idnodo" : 58,
+            "vecinos" : [57,59,66,74]
+        },{
+            "latitud" : 37.986414,
+            "longitud" : -1.115584,
+            "factori" : 0.57,
+            "idnodo" : 59,
+            "vecinos" : [47,48,58,66,74]
+        },{
+            "latitud" : 37.984761,
+            "longitud" : -1.141100,
+            "factori" : 0.54,
+            "idnodo" : 60,
+            "vecinos" : [49,50,61,67,68,75,108]
+        },{
+            "latitud" : 37.985519,
+            "longitud" : -1.137804,
+            "factori" : 0.5,
+            "idnodo" : 61,
+            "vecinos" : [50,60,68,106]
+        },{
+            "latitud" : 37.985370,
+            "longitud" : -1.134145,
+            "factori" : 0.44,
+            "idnodo" : 62,
+            "vecinos" : [51,69,70,106,107]
+        },{
+            "latitud" : 37.985166,
+            "longitud" : -1.129045,
+            "factori" : 0.78,
+            "idnodo" : 63,
+            "vecinos" : [52,53,64,70,77,107]
+        },{
+            "latitud" : 37.984285,
+            "longitud" : -1.125625,
+            "factori" : 0.65,
+            "idnodo" : 64,
+            "vecinos" : [43,52,53,63,65,70,71,78]
+        },{
+            "latitud" : 37.984560,
+            "longitud" : -1.122928,
+            "factori" : 0.54,
+            "idnodo" : 65,
+            "vecinos" : [55,57,64,66,71,72]
+        },{
+            "latitud" : 37.983868,
+            "longitud" :-1.118544,
+            "factori" : 0.47,
+            "idnodo" : 66,
+            "vecinos" : [57,58,59,65,72,73,74,79]
+        },{
+            "latitud" : 37.982767,
+            "longitud" : -1.138271,
+            "factori" : 0.57,
+            "idnodo" : 67,
+            "vecinos" : [60,68,69,75,108]
+        },{
+            "latitud" : 37.984070,
+            "longitud" : -1.137372,
+            "factori" : 0.54,
+            "idnodo" : 68,
+            "vecinos" : [60,61,67,69,106]
+        },{
+            "latitud" : 37.983829,
+            "longitud" : -1.135202,
+            "factori" : 0.57,
+            "idnodo" : 69,
+            "vecinos" : [62,67,68,70,76,85,106,107]
+        },{
+            "latitud" : 37.983104,
+            "longitud" : -1.131679,
+            "factori" : 1.09,
+            "idnodo" : 70,
+            "vecinos" : [62,63,64,69,71,76,77,85,107]
+        },{
+            "latitud" : 37.982295,
+            "longitud" : -1.124715,
+            "factori" : 0.43,
+            "idnodo" : 71,
+            "vecinos" : [64,65,70,72,77,79]
+        },{
+            "latitud" : 37.983115,
+            "longitud" : -1.122129,
+            "factori" : 0.38,
+            "idnodo" : 72,
+            "vecinos" : [57,65,66,71,73,79]
+        },{
+            "latitud" : 37.982822,
+            "longitud" : -1.118185,
+            "factori" : 0.44,
+            "idnodo" : 73,
+            "vecinos" : [66,72,74,80]
+        },{
+            "latitud" : 37.982903,
+            "longitud" : -1.114399,
+            "factori" : 0.6,
+            "idnodo" : 74,
+            "vecinos" : [58,59,66,73,80,89,100]
+        },{
+            "latitud" : 37.979131,
+            "longitud" : -1.141457,
+            "factori" : 0.6,
+            "idnodo" : 75,
+            "vecinos" : [60,67,76,81,108]
+        },{
+            "latitud" : 37.981965,
+            "longitud" : -1.133163,
+            "factori" : 0.6,
+            "idnodo" : 76,
+            "vecinos" : [69,70,75,77,83,85,108]
+        },{
+            "latitud" : 37.980871,
+            "longitud" : -1.127074,
+            "factori" : 0.69,
+            "idnodo" : 77,
+            "vecinos" : [63,64,70,71,76,78,79,86,87]
+        },{
+            "latitud" : 37.980794,
+            "longitud" : -1.121546,
+            "factori" : 0.73,
+            "idnodo" : 78,
+            "vecinos" : [77,79,88,89,97]
+        },{
+            "latitud" : 37.981133,
+            "longitud" : -1.121470,
+            "factori" : 0.63,
+            "idnodo" : 79,
+            "vecinos" : [66,71,72,77,78,80]
+        },{
+            "latitud" : 37.981749,
+            "longitud" : -1.117863,
+            "factori" : 0.41,
+            "idnodo" : 80,
+            "vecinos" : [73,74,79,89]
+        },{
+            "latitud" : 37.977059,
+            "longitud" : -1.142140,
+            "factori" : 0.7,
+            "idnodo" : 81,
+            "vecinos" : [75,90,91,108]
+        },{
+            "latitud" : 37.978006,
+            "longitud" : -1.133984,
+            "factori" : 0.54,
+            "idnodo" : 82,
+            "vecinos" : [83,91,92,93,108]
+        },{
+            "latitud" : 37.979192,
+            "longitud" : -1.132287,
+            "factori" : 0.37,
+            "idnodo" : 83,
+            "vecinos" : [76,82,84,85,93,108]
+        },{
+            "latitud" : 37.979022,
+            "longitud" : -1.130651,
+            "factori" : 0.86,
+            "idnodo" : 84,
+            "vecinos" : [83,85,86,93,94]
+        },{
+            "latitud" : 37.980197,
+            "longitud" : -1.129249,
+            "factori" : 1.14,
+            "idnodo" : 85,
+            "vecinos" : [69,70,76,83,84,86]
+        },{
+            "latitud" : 37.980045,
+            "longitud" : -1.128080,
+            "factori" : 0.73,
+            "idnodo" : 86,
+            "vecinos" : [77,84,85,87,94,95,96]
+        },{
+            "latitud" : 37.979066,
+            "longitud" : -1.124885,
+            "factori" : 0.47,
+            "idnodo" : 87,
+            "vecinos" : [77,86,88,96]
+        },{
+            "latitud" : 37.979466,
+            "longitud" : -1.123373,
+            "factori" : 0.57,
+            "idnodo" : 88,
+            "vecinos" : [78,87,89,96,97,100]
+        },{
+            "latitud" : 37.980400,
+            "longitud" : -1.117952,
+            "factori" : 0.36,
+            "idnodo" : 89,
+            "vecinos" : [74,80,88,97,98,99,100]
+        },{
+            "latitud" : 37.975533,
+            "longitud" : -1.141117,
+            "factori" : 0.8,
+            "idnodo" : 90,
+            "vecinos" : [81,91,108]
+        },{
+            "latitud" : 37.976553,
+            "longitud" : -1.135255,
+            "factori" : 0.98,
+            "idnodo" : 91,
+            "vecinos" : [81,82,90,92,93,108]
+        },{
+            "latitud" : 37.975534,
+            "longitud" : -1.133716,
+            "factori" : 1.2,
+            "idnodo" : 92,
+            "vecinos" : [82,91,93,99,109]
+        },{
+            "latitud" : 37.977011,
+            "longitud" : -1.132405,
+            "factori" : 0.81,
+            "idnodo" : 93,
+            "vecinos" : [82,83,84,91,92,94]
+        },{
+            "latitud" : 37.976594,
+            "longitud" : -1.130008,
+            "factori" : 0.73,
+            "idnodo" : 94,
+            "vecinos" : [84,86,93,95,109]
+        },{
+            "latitud" : 37.977136,
+            "longitud" : -1.127597,
+            "factori" : 0.6,
+            "idnodo" : 95,
+            "vecinos" : [86,94,96,97,98,109]
+        },{
+            "latitud" : 37.978284,
+            "longitud" : -1.125086,
+            "factori" : 0.4,
+            "idnodo" : 96,
+            "vecinos" : [86,87,88,95,97]
+        },{
+            "latitud" : 37.977869,
+            "longitud" : -1.120965,
+            "factori" : 0.48,
+            "idnodo" : 97,
+            "vecinos" : [78,88,89,95,96,98]
+        },{
+            "latitud" : 37.977044,
+            "longitud" : -1.118362,
+            "factori" : 0.56,
+            "idnodo" : 98,
+            "vecinos" : [89,95,97,99,109]
+        },{
+            "latitud" : 37.975623,
+            "longitud" : -1.116590,
+            "factori" : 0.71,
+            "idnodo" : 99,
+            "vecinos" : [89,92,98,100,109]
+        },{
+            "latitud" : 37.978336,
+            "longitud" : -1.114611,
+            "factori" : 0.58,
+            "idnodo" : 100,
+            "vecinos" : [74,88,89,99]
+        },{
+            "latitud" : 37.993358,
+            "longitud" : -1.144434,
+            "factori" : 1,
+            "idnodo" : 101,
+            "vecinos" : [0,9,18,49]
+        },{
+            "latitud" : 37.991529,
+            "longitud" : -1.135495,
+            "factori" : 1.09,
+            "idnodo" : 102,
+            "vecinos" : [19,20,22,23,33,41,105]
+        },{
+            "latitud" : 37.991566,
+            "longitud" : -1.125434,
+            "factori" : 0.6,
+            "idnodo" : 103,
+            "vecinos" : [13,24,25,26,35,36,44,45]
+        },{
+            "latitud" : 37.990525,
+            "longitud" : -1.119398,
+            "factori" : 0.68,
+            "idnodo" : 104,
+            "vecinos" : [37,38,47,56,57]
+        },{
+            "latitud" : 37.988897,
+            "longitud" : -1.134704,
+            "factori" : 0.73,
+            "idnodo" : 105,
+            "vecinos" : [33,34,35,40,41,51,102]
+        },{
+            "latitud" : 37.985400,
+            "longitud" : -1.136240,
+            "factori" : 0.41,
+            "idnodo" : 106,
+            "vecinos" : [40,50,51,61,62,68,69]
+        },{
+            "latitud" : 37.985466,
+            "longitud" : -1.132014,
+            "factori" : 0.62,
+            "idnodo" : 107,
+            "vecinos" : [41,51,52,62,63,69,70]
+        },{
+            "latitud" : 37.978920,
+            "longitud" : -1.137152,
+            "factori" : 0.5,
+            "idnodo" : 108,
+            "vecinos" : [60,67,75,76,81,82,83,90,91]
+        },{
+            "latitud" : 37.976469,
+            "longitud" : -1.127190,
+            "factori" : 0.6,
+            "idnodo" : 109,
+            "vecinos" : [92,94,95,98,99]
+        }
+    ]
+}
