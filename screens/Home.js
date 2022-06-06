@@ -27,10 +27,12 @@ export default function Home({ navigation }) {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [modalError, setModalError] = useState(false);
-  
+
   useEffect(() => {
-    setIsLoading(true);
-    actualizarRegionesBBDD();
+    if (isFocused) {
+      setIsLoading(true);
+      actualizarRegionesBBDD();
+    }
   }, [isFocused]);
 
   async function actualizarRegionesBBDD() {
@@ -97,11 +99,16 @@ export default function Home({ navigation }) {
                   <View
                     style={{
                       backgroundColor: "white",
-                      height: "50%",
-                      width: "85%",
+                      height: "22%",
+                      width: "80%",
+                      justifyContent: "center",
+                      borderRadius: 10,
                     }}
                   >
-                    <Text>AMAI</Text>
+                    <Text style={{ marginHorizontal: 10, textAlign: "center" }}>
+                      Si activas la ubicación podremos automáticamente
+                      proporcionar el AQI del aire en tu localización.
+                    </Text>
                     <TouchableOpacity
                       style={styles.button}
                       onPress={() => setModalError(false)}
