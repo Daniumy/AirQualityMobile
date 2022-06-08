@@ -41,7 +41,7 @@ export default function Home({ navigation }) {
       .doc(auth.currentUser.email)
       .get();
     const regiones = regionesDB.data();
-    setRegions(Object.values(regiones));
+    regiones ? setRegions(Object.values(regiones)) : null;
     setIsLoading(false);
   }
 
@@ -88,7 +88,7 @@ export default function Home({ navigation }) {
               }}
             >
               <Modal
-                animationType="slide"
+                animationType="fade"
                 transparent={true}
                 visible={modalError}
                 onRequestClose={() => {

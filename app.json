@@ -2,7 +2,7 @@
   "expo": {
     "name": "AirQualityApp",
     "slug": "AirQualityApp",
-    "version": "1.0.0",
+    "version": "1.0.11",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -22,13 +22,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.daniumy.AirQualityApp"
+      "package": "com.daniumy.AirQualityApp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBf4WyMdg245epDDWuNQlw5-J0CjrXZJ-E"
+        }
+      }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     }
   }
 }

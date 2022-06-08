@@ -17,20 +17,34 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector, useDispatch } from "react-redux";
 import AirCard from "../components/AirCard";
 import { auth, db } from "../firebase";
+import { REACT_APP_MAPVIEW_API } from "@env";
+
 export default function Mapa({ navigation }) {
   const { location } = useSelector((state) => state.GPSReducer);
+
+  const defaultLocation = {
+    latitude: 37.9922399,
+    longitude: -1.1306544,
+    latitudeDelta: 1,
+    longitudeDelta: 1,
+  }
 
   const [regionAdded, setRegionAdded] = useState(false);
 
   const [regions, setRegions] = useState([]);
 
   const [localRegion, setLocalRegion] = useState({
-    direccion: null,
     latitude: location.latitude,
     longitude: location.longitude,
     latitudeDelta: 0.015,
     longitudeDelta: 0.015,
   });
+  console.log("location");
+  console.log(location);
+  console.log("regions");
+  console.log(regions);
+  console.log("localRegion");
+  console.log(localRegion);
 
   async function getRegionesBBDD() {
     const regionesDB = await db
@@ -59,10 +73,11 @@ export default function Mapa({ navigation }) {
   function añadirFavorito(regionLocal) {
     let repetido = false;
     let direccion = regionLocal.direccion;
-    let aux = direccion.split('.');
+    let aux = direccion.split(".");
     let direccionModificada = aux.join("");
     regions.map((region, index) => {
-      if (region.localizacion.direccion === direccionModificada) repetido = true;
+      if (region.localizacion.direccion === direccionModificada)
+        repetido = true;
     });
     if (!repetido) {
       let nuevaRegion = {
@@ -89,9 +104,7 @@ export default function Mapa({ navigation }) {
         },
         { merge: true }
       )
-      .then(() =>
-        setRegionAdded(!regionAdded)
-      );
+      .then(() => setRegionAdded(!regionAdded));
   }
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -121,7 +134,7 @@ export default function Mapa({ navigation }) {
             setModalVisible(true);
           }}
           query={{
-            key: "AIzaSyBf4WyMdg245epDDWuNQlw5-J0CjrXZJ-E",
+            key: REACT_APP_MAPVIEW_API,
             language: "es",
             location: `${localRegion.latitude}, ${localRegion.longitude}`, //esto hace que devuelva sitios cercanos a esta localizacion, que querremos que sea la nuestra.
           }}
@@ -199,20 +212,21 @@ export default function Mapa({ navigation }) {
           </View>
         </Modal>
       )}
-      <MapView
-        initialRegion={location}
-        provider="google"
-        style={styles.map}
-        region={localRegion}
-      >
-        <Marker
-          coordinate={{
-            latitude: localRegion.latitude,
-            longitude: localRegion.longitude,
-          }}
-        ></Marker>
-      </MapView>
-
+      <View style={styles.container}>
+        <MapView
+          initialRegion={location?.latitude ? location : defaultLocation}
+          provider="google"
+          style={styles.map}
+          region={localRegion?.latitude ? localRegion : defaultLocation}
+        >
+          <Marker
+            coordinate={{
+              latitude: localRegion?.latitude ? localRegion.latitude : defaultLocation.latitude,
+              longitude: localRegion?.longitude ? localRegion.longitude : defaultLocation.longitude,
+            }}
+          ></Marker>
+        </MapView>
+      </View>
       {!modalVisible && (
         <TouchableOpacity
           style={{
@@ -255,10 +269,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   map: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 60,
+    height: Dimensions.get("window").height,
   },
 });

@@ -1,12 +1,14 @@
 import {
   SET_CURRENT_GPS,
   SET_DESTINY,
-  SET_REGION_ADDED
+  SET_SYMPTOMS_ADDED,
+  SET_SYMPTOMS_SENT
 } from "./actions";
 //reducer es el que actualiza el store, es como un controlador, y este actualiza el state.
 //los estados se encuentran declarados aquí
-const initialRegionAdded = {
-  regionAdded: false,
+const initialSymptoms = {
+  symptomsAdded: false,
+  symptomsSent: false,
 }
 const initialGPSState = {
   location: {
@@ -14,7 +16,6 @@ const initialGPSState = {
     longitude: -1.1306544,
     latitudeDelta: 0.015,
     longitudeDelta: 0.015,
-    default: true,
   },
 };
 
@@ -28,10 +29,12 @@ const initialDestinyState = {
   },
 };
 
-function regionReducer(state = initialRegionAdded, action) {
+function symptomsReducer(state = initialSymptoms, action) {
   switch (action.type) {
-    case SET_REGION_ADDED:
-      return { ...state, regionAdded: action.payload };
+    case SET_SYMPTOMS_ADDED:
+      return { ...state, symptomsAdded: action.payload };
+    case SET_SYMPTOMS_SENT:
+      return { ...state, symptomsSent: action.payload };
     default:
       return state;
   }
@@ -46,10 +49,11 @@ function GPSReducer(state = initialGPSState, action) {
           ...action.payload,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
-          default: false,
         },
       };
     default:
+      console.log("XDDDDDDDDDDDDDDDDDDDD")
+      console.log(state);
       return state;
   }
 }
@@ -72,7 +76,7 @@ function DestinyReducer(state = initialDestinyState, action) {
 
 
 export {
-  regionReducer,
+  symptomsReducer,
   GPSReducer,
   DestinyReducer,
 };

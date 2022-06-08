@@ -9,12 +9,22 @@ import HeaderTabs from "../components/HeaderTabs";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { auth, db } from "../firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { setSymptomsAdded, setSymptomsSent } from "../redux/actions";
 
 export default function Formulario({ navigation }) {
   const date = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
   const fecha = date + "/" + month + "/" + year;
+  const dispatch = useDispatch();
+  const { symptomsAdded, symptomsSent } = useSelector(
+    (state) => state.symptomsReducer
+  );
+
+  function handleSymptomsSent(value) {
+    dispatch(setSymptomsSent(value));
+  }
 
   const espirometriaInitial = {
     selectedEspirometria: "Si",
@@ -57,11 +67,44 @@ export default function Formulario({ navigation }) {
     setIntentoDeEnvioDeSíntomas(true);
     if (!checkIfCamposIncorrectos()) {
       addSymptomsToBBDD();
-      setActivo(!activo);
+      console.log("111111111111111111111111111111111111111111");
+      handleSymptomsSent(true);
+    }
+  }
+
+  async function recuperarSintomasYaEnviados() {
+    const sintomasDB = await db
+      .collection("síntomas")
+      .doc(auth.currentUser.email)
+      .get();
+    const sintomas = sintomasDB.data();
+
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    var fecha = date + "/" + month + "/" + year;
+    let sintomasExisten = sintomas ? sintomas[fecha]?.síntomas : false;
+    if (sintomasExisten) {
+      setEspirometria(sintomasExisten.espirometria);
+      setDisneaNoche(sintomasExisten.disneaNoche);
+      setDisneaDia(sintomasExisten.disneaDia);
+      setSaturacion(sintomasExisten.saturacion);
+      setFreqCardiaca(sintomasExisten.freqCardiaca);
+      setDormido(sintomasExisten.dormido);
+      setCaminata(sintomasExisten.caminata);
+      setSalidoCasa(sintomasExisten.salidoCasa);
+      setTos(sintomasExisten.tos);
+      setEmpeoramiento(sintomasExisten.empeoramiento);
     }
   }
 
   async function addSymptomsToBBDD() {
+    dispatch(
+      setSymptomsAdded({
+        symptomsAdded: !symptomsAdded,
+      })
+    );
+
     const usuarioDB = await db
       .collection("síntomas")
       .doc(auth.currentUser.email)
@@ -117,11 +160,12 @@ export default function Formulario({ navigation }) {
       var year = new Date().getFullYear();
       var fecha = date + "/" + month + "/" + year;
       setCurrentDate(fecha);
-      setActivo(false);
+      console.log("2222222222222222222222222222222");
+      handleSymptomsSent(false);
     }
   }, []);
 
-  if (!activo) {
+  if (!symptomsSent) {
     return (
       <>
         <SafeAreaView
@@ -139,10 +183,7 @@ export default function Formulario({ navigation }) {
               alignItems: "center",
             }}
           >
-            <HeaderTabs
-              titulo="Diario de síntomas"
-              navigation={navigation}
-            />
+            <HeaderTabs titulo="Diario de síntomas" navigation={navigation} />
             <Divider
               width={1}
               style={{ marginHorizontal: 15, borderRadius: 100 }}
@@ -474,12 +515,14 @@ export default function Formulario({ navigation }) {
                 alignItems: "center",
                 borderRadius: 10,
               }}
-              onPress={() => setActivo(!activo)}
+              onPress={() => {
+                handleSymptomsSent(false);
+                recuperarSintomasYaEnviados();
+              }}
             >
               <Text
                 style={{ fontSize: 17, color: "white", fontWeight: "bold" }}
               >
-                {/* rgba(240, 12, 12, 0.85) */}
                 Hacerlo de nuevo
               </Text>
             </TouchableOpacity>

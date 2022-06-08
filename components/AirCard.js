@@ -32,7 +32,8 @@ import {
   aqiToConcentration,
   ppbToMicrogram,
 } from "../utils/aqiCalculator";
-import {REACT_APP_WEATHER_API, REACT_APP_AIRQ_API} from "@env";
+import { REACT_APP_WEATHER_API, REACT_APP_AIRQ_API } from "@env";
+import { isInsideArea1 } from "../utils/optimalRouteFunctions";
 
 const WEATHER_API_KEY = REACT_APP_WEATHER_API;
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
@@ -45,6 +46,24 @@ export default function AirCard({ region, withExtra, removeCard }) {
   const [currentAqiData, setCurrentAqiData] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
+
+  function getTodaysAvgPm10Aqi(aqisArray) {
+    console.log(aqisArray);
+
+    var date = new Date().getDate();
+    date = date.toString().padStart(2, "0");
+    var month = new Date().getMonth() + 1;
+    month = month.toString().padStart(2, "0");
+    var year = new Date().getFullYear();
+    var fecha = year + "-" + month + "-" + date;
+    for (let i = 0; i < aqisArray.length; i++) {
+      console.log(aqisArray[i].day + " " + fecha);
+      if (aqisArray[i].day == fecha) {
+        return aqisArray[i].avg;
+      }
+    }
+    return null;
+  }
 
   useEffect(() => {
     const airqUrl = `${BASE_AIRQ_URL}:${region.latitude};${region.longitude}/?token=${AIRQ_API_KEY}`;
@@ -109,26 +128,45 @@ export default function AirCard({ region, withExtra, removeCard }) {
       highestAqi.pollutant
     );
     let partialAqis = [];
-
-    pm10 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
-      : partialAqis.push(undefined);
-    so2 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, so2.v, "so2"))
-      : partialAqis.push(undefined);
-    co !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, co.v, "co"))
-      : partialAqis.push(undefined);
-    no2 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, no2.v, "no2"))
-      : partialAqis.push(undefined);
-    o3 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
-      : partialAqis.push(undefined);
-
+    if (isInsideArea1(region.latitude, region.longitude)) {
+      pm10 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
+        : partialAqis.push(undefined);
+      so2 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, so2.v, "so2"))
+        : partialAqis.push(undefined);
+      co !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, co.v, "co"))
+        : partialAqis.push(undefined);
+      no2 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, no2.v, "no2"))
+        : partialAqis.push(undefined);
+      o3 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
+        : partialAqis.push(undefined);
+    } else {
+      pm10 !== undefined
+        ? partialAqis.push(
+            getTodaysAvgPm10Aqi(currentAqiData.data.forecast.daily.pm10)
+          )
+        : partialAqis.push(undefined);
+      so2 !== undefined
+        ? partialAqis.push(so2.v * 0.286)
+        : partialAqis.push(undefined);
+      co !== undefined
+        ? partialAqis.push(co.v * 0.001 * 10)
+        : partialAqis.push(undefined);
+      no2 !== undefined
+        ? partialAqis.push(no2.v * 0.5)
+        : partialAqis.push(undefined);
+      o3 !== undefined
+        ? partialAqis.push(o3.v * 0.556)
+        : partialAqis.push(undefined);
+    }
+    console.log(region.direccion);
     return (
       <>
-        <View style={GlobalStyles.AirCardContainer}>
+        <View style={[GlobalStyles.AirCardContainer, { height: region.direccion.length >= 61  ? 320 : 292 }]}>
           <TopCard
             aqi={globalAqi != undefined ? globalAqi : "?"}
             weatherTemp={weatherTemp}
@@ -203,7 +241,7 @@ function ExtraBottom({ extraActivo, setExtraActivo, removeCard, region, id }) {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{paddingVertical: 0, paddingHorizontal: 8, bottom: 0, }}
+          style={{ paddingVertical: 0, paddingHorizontal: 8, bottom: 0 }}
           onPress={() => setExtraActivo(false)}
         >
           <FontAwesome5 name="angle-up" size={40} color="black"></FontAwesome5>

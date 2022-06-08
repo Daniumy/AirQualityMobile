@@ -39,17 +39,7 @@ export default function RootNavigation() {
   }, []);
 
   if (isLoading) {
-    return (
-      <View style={{alignItems: "center", justifyContent: "center", height: "100%"}}>
-        <Image
-          source={icons.icon2}
-          style={{
-            width: 200,
-            height: 200,
-          }}
-        ></Image>
-      </View>
-    );
+    return null;
   }
   else
   return (

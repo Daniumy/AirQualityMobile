@@ -28,15 +28,25 @@ import {
   calculateRoute,
 } from "../utils/optimalRouteFunctions";
 import MapViewDirections from "react-native-maps-directions";
-import {REACT_APP_MAPVIEW_API} from "@env";
+import { REACT_APP_MAPVIEW_API } from "@env";
 
 export default function MapaRuta({ navigation }) {
-  const { regions } = useSelector((state) => state.regionReducer);
   const { location } = useSelector((state) => state.GPSReducer);
   const { destinyGlobalLocation } = useSelector(
     (state) => state.DestinyReducer
   );
   const dispatch = useDispatch();
+
+  const defaultDestinyLocation = {
+    latitude: 37.984047,
+    longitude: -1.128575,
+  };
+  const defaultLocation = {
+    latitude: 37.9922399,
+    longitude: -1.1306544,
+    latitudeDelta: 0.04,
+    longitudeDelta: 0.04,
+  };
 
   function setLocalDestinoRegion(destino) {
     dispatch(
@@ -76,7 +86,7 @@ export default function MapaRuta({ navigation }) {
       <MapViewDirections
         origin={initialPoint}
         destination={finalPoint}
-        apikey={REACT_APP_MAPVIEW_API} 
+        apikey={REACT_APP_MAPVIEW_API}
         strokeWidth={4}
         strokeColor={"darkblue"}
         optimizeWaypoints={true}
@@ -88,6 +98,10 @@ export default function MapaRuta({ navigation }) {
     );
   }
 
+  if (!destinyGlobalLocation.latitude || !destinyGlobalLocation.longitude) {
+    destinyGlobalLocation.latitude = defaultDestinyLocation.latitude;
+    destinyGlobalLocation.longitude = defaultDestinyLocation.longitude;
+  }
   return (
     <SafeAreaView
       style={[GlobalStyles.AndroidSafeArea, GlobalStyles.SafeAreaBackground]}
@@ -119,7 +133,7 @@ export default function MapaRuta({ navigation }) {
           }
         }}
         query={{
-          key: "AIzaSyDEf2jrKFuj_bfHjQkQxgHN_V_TkcVMzYE",
+          key: REACT_APP_MAPVIEW_API,
           language: "es",
           location: `${localRegion.latitude}, ${localRegion.longitude}`, //esto hace que devuelva sitios cercanos a esta localizacion, que querremos que sea la nuestra.
         }}
@@ -157,78 +171,110 @@ export default function MapaRuta({ navigation }) {
       />
 
       <MapView
-        initialRegion={location}
+        initialRegion={location.latitude ? location : defaultLocation}
         provider="google"
         style={styles.map}
-        region={localRegion}
+        region={localRegion.latitude ? localRegion : defaultLocation}
       >
         {renderOptimalRoute()}
         <Marker
           coordinate={{
-            latitude: localRegion.latitude,
-            longitude: localRegion.longitude,
+            latitude: localRegion.latitude
+              ? localRegion.latitude
+              : defaultLocation.latitude,
+            longitude: localRegion.longitude
+              ? localRegion.longitude
+              : defaultLocation.longitude,
           }}
-          title="Tu ubicación"
+          title="Origen"
+          draggable={true}
+          onDragStart={(e) => {
+            console.log("Drag start", e.nativeEvent.coordinate);
+          }}
+          onDragEnd={(e) => {
+            if (
+              !isInsideArea1(
+                e.nativeEvent.coordinate.latitude,
+                e.nativeEvent.coordinate.longitude
+              )
+            ) {
+              setLocalRegion({
+                ...localRegion,
+                latitude: 37.9854323,
+                longitude: -1.1290433,
+              });
+              alert(
+                "¡Parece que te has salido del área disponible!"
+              );
+            } else {
+              setLocalRegion({
+                ...localRegion,
+                latitude: e.nativeEvent.coordinate.latitude,
+                longitude: e.nativeEvent.coordinate.longitude,
+              });
+              setCurrentRoute(null);
+            }
+          }}
         ></Marker>
-        {destinyGlobalLocation.direccion != null && (
-          <Marker
-            coordinate={{
-              latitude: destinyGlobalLocation.latitude,
-              longitude: destinyGlobalLocation.longitude,
-            }}
-            draggable={true}
-            onDragStart={(e) => {
-              console.log("Drag start", e.nativeEvent.coordinate);
-            }}
-            onDragEnd={(e) => {
-              if (
-                !isInsideArea1(
-                  e.nativeEvent.coordinate.latitude,
-                  e.nativeEvent.coordinate.longitude
-                )
-              ) {
-                setLocalDestinoRegion({
-                  ...destinyGlobalLocation,
-                  latitude: 37.9854323,
-                  longitude: -1.1290433,
-                });
-                alert(
-                  "¡Parece que te has salido del área disponible! \nPondremos el marcador del destino en el centro del área disponible"
-                );
-              } else {
-                setLocalDestinoRegion({
-                  ...destinyGlobalLocation,
-                  latitude: e.nativeEvent.coordinate.latitude,
-                  longitude: e.nativeEvent.coordinate.longitude,
-                });
-                setCurrentRoute(null);
-              }
-            }}
-            pinColor={"black"}
-            title="Destino"
-          ></Marker>
-        )}
+
+        <Marker
+          coordinate={{
+            latitude: destinyGlobalLocation.latitude,
+            longitude: destinyGlobalLocation.longitude,
+          }}
+          draggable={true}
+          onDragStart={(e) => {
+            console.log("Drag start", e.nativeEvent.coordinate);
+          }}
+          onDragEnd={(e) => {
+            if (
+              !isInsideArea1(
+                e.nativeEvent.coordinate.latitude,
+                e.nativeEvent.coordinate.longitude
+              )
+            ) {
+              setLocalDestinoRegion({
+                ...destinyGlobalLocation,
+                latitude: defaultDestinyLocation.latitude,
+                longitude: defaultDestinyLocation.longitude,
+              });
+              alert(
+                "¡Parece que te has salido del área disponible!"
+              );
+            } else {
+              setLocalDestinoRegion({
+                ...destinyGlobalLocation,
+                latitude: e.nativeEvent.coordinate.latitude,
+                longitude: e.nativeEvent.coordinate.longitude,
+              });
+              setCurrentRoute(null);
+            }
+          }}
+          pinColor={"black"}
+          title="Destino"
+        ></Marker>
+
         {renderRouteLimit()}
       </MapView>
-      {destinyGlobalLocation.direccion != null && (
-        <TouchableOpacity
-          style={{
-            color: "#000080",
-            backgroundColor: "#000080",
-            padding: 10,
-            position: "absolute",
-            top: "81%",
-            alignSelf: "center",
-            elevation: 1,
-            borderRadius: 10,
-          }}
-          onPress={() => getOptimalRoute(localRegion, destinyGlobalLocation)}
-        >
-          <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}>
-            Calcular ruta óptima
-          </Text>
-        </TouchableOpacity>
-      )}
+
+      <TouchableOpacity
+        style={{
+          color: "#000080",
+          backgroundColor: "#000080",
+          padding: 10,
+          position: "absolute",
+          top: "81%",
+          alignSelf: "center",
+          elevation: 1,
+          borderRadius: 10,
+        }}
+        onPress={() => getOptimalRoute(localRegion, destinyGlobalLocation)}
+      >
+        <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}>
+          Calcular ruta óptima
+        </Text>
+      </TouchableOpacity>
+
       <TouchableOpacity
         style={{
           color: "#000080",

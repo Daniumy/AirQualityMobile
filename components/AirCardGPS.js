@@ -36,7 +36,8 @@ import { useDispatch } from "react-redux";
 import { setCurrentGPS } from "../redux/actions";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { auth, db } from "../firebase";
-import {REACT_APP_WEATHER_API, REACT_APP_AIRQ_API} from "@env";
+import { REACT_APP_WEATHER_API, REACT_APP_AIRQ_API } from "@env";
+import { isInsideArea1 } from "../utils/optimalRouteFunctions";
 
 const deviceWidth = Math.round(Dimensions.get("window").width);
 const WEATHER_API_KEY = REACT_APP_WEATHER_API;
@@ -44,7 +45,7 @@ const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
 const AIRQ_API_KEY = REACT_APP_AIRQ_API;
 const BASE_AIRQ_URL = "https://api.waqi.info/feed/geo";
 
-export default function AirCardGPS({setModalError}) {
+export default function AirCardGPS({ setModalError }) {
   const dispatch = useDispatch();
 
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -54,6 +55,24 @@ export default function AirCardGPS({setModalError}) {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [extraActivo, setExtraActivo] = useState(false);
+
+  console.log(currentAqiData);
+
+  function getTodaysAvgPm10Aqi(aqisArray) {
+    var date = new Date().getDate();
+    date = date.toString().padStart(2, "0");
+    var month = new Date().getMonth() + 1;
+    month = month.toString().padStart(2, "0");
+    var year = new Date().getFullYear();
+    var fecha = year + "/" + month + "/" + date;
+    for (let i = 0; i < aqisArray.length; i++) {
+      if (aqisArray[i].day == fecha) {
+        return aqisArray[i].avg;
+      }
+    }
+    return null;
+  }
+
   useEffect(() => {
     (async () => {
       try {
@@ -75,7 +94,7 @@ export default function AirCardGPS({setModalError}) {
         );
         setCurrentAddress(address[0]);
       } catch (error) {
-        console.log("AMAIIIII");
+        removeGPSConcentration();
         setModalError(true);
         return;
       }
@@ -97,6 +116,20 @@ export default function AirCardGPS({setModalError}) {
       .set({
         concentracion: partialAqis,
       });
+  }
+
+  async function removeGPSConcentration() {
+    dispatch(
+      setCurrentGPS({
+        latitude: null,
+        longitude: null,
+      })
+    );
+
+    const sintomasDB = await db
+      .collection("concentraciones")
+      .doc(auth.currentUser.email)
+      .delete();
   }
 
   async function fetchData(weatherUrl, airqUrl) {
@@ -121,7 +154,7 @@ export default function AirCardGPS({setModalError}) {
       }
     } catch (error) {
       alert(
-        "Lo sentimos, ha ocurrido un error. Vuelva a intentarlo más tarde.222222222222222222"
+        "Lo sentimos, ha ocurrido un error. Vuelva a intentarlo más tarde."
       );
       console.log(error);
     }
@@ -157,40 +190,64 @@ export default function AirCardGPS({setModalError}) {
 
     let partialAqis = [];
 
-    pm10 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
-      : partialAqis.push(undefined);
-    so2 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, so2.v, "so2"))
-      : partialAqis.push(undefined);
-    co !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, co.v, "co"))
-      : partialAqis.push(undefined);
-    no2 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, no2.v, "no2"))
-      : partialAqis.push(undefined);
-    o3 !== undefined
-      ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
-      : partialAqis.push(undefined);
+    if (
+      isInsideArea1(
+        currentLocation.coords.latitude,
+        currentLocation.coords.longitude
+      )
+    ) {
+      pm10 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
+        : partialAqis.push(undefined);
+      so2 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, so2.v, "so2"))
+        : partialAqis.push(undefined);
+      co !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, co.v, "co"))
+        : partialAqis.push(undefined);
+      no2 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, no2.v, "no2"))
+        : partialAqis.push(undefined);
+      o3 !== undefined
+        ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
+        : partialAqis.push(undefined);
 
-    partialAqis[0] = aqiToConcentration(partialAqis[0], "pm10");
-    partialAqis[1] = ppbToMicrogram(
-      aqiToConcentration(partialAqis[1], "so2"),
-      "so2"
-    );
-    partialAqis[2] = ppbToMicrogram(
-      aqiToConcentration(partialAqis[2], "co"),
-      "co"
-    );
-    partialAqis[3] = ppbToMicrogram(
-      aqiToConcentration(partialAqis[3], "no2"),
-      "no2"
-    );
-    partialAqis[4] = ppbToMicrogram(
-      aqiToConcentration(partialAqis[4], "o3"),
-      "o3"
-    );
-
+      partialAqis[0] = aqiToConcentration(partialAqis[0], "pm10");
+      partialAqis[1] = ppbToMicrogram(
+        aqiToConcentration(partialAqis[1], "so2"),
+        "so2"
+      );
+      partialAqis[2] = ppbToMicrogram(
+        aqiToConcentration(partialAqis[2], "co"),
+        "co"
+      );
+      partialAqis[3] = ppbToMicrogram(
+        aqiToConcentration(partialAqis[3], "no2"),
+        "no2"
+      );
+      partialAqis[4] = ppbToMicrogram(
+        aqiToConcentration(partialAqis[4], "o3"),
+        "o3"
+      );
+    } else {
+      pm10 !== undefined
+        ? partialAqis.push(
+            getTodaysAvgPm10Aqi(currentAqiData.data.forecast.daily.pm10)
+          )
+        : partialAqis.push(undefined);
+      so2 !== undefined
+        ? partialAqis.push(so2.v * 0.286)
+        : partialAqis.push(undefined);
+      co !== undefined
+        ? partialAqis.push(co.v * 0.001 * 10)
+        : partialAqis.push(undefined);
+      no2 !== undefined
+        ? partialAqis.push(no2.v * 0.5)
+        : partialAqis.push(undefined);
+      o3 !== undefined
+        ? partialAqis.push(o3.v * 0.556)
+        : partialAqis.push(undefined);
+    }
     updateGPSConcentration(partialAqis);
 
     return (

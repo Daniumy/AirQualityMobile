@@ -11,7 +11,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import AppIcon from "../assets/icons/what1.png";
 import { auth, db } from "../firebase";
 import { Picker } from "@react-native-picker/picker";
-import { setUserLoggedInAction } from "../redux/actions";
 import { useDispatch } from "react-redux";
 
 export default function Registro({ navigation }) {
@@ -26,11 +25,6 @@ export default function Registro({ navigation }) {
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        dispatch(
-          setUserLoggedInAction({
-            userLogged: true,
-          })
-        );
         db.collection("usuarios")
           .doc(user.uid)
           .set({
