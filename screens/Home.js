@@ -61,7 +61,7 @@ export default function Home({ navigation }) {
     return (
       <>
         <SafeAreaView
-          style={[GlobalStyles.AndroidSafeArea, { marginBottom: 57 }]}
+          style={[GlobalStyles.AndroidSafeArea, { marginBottom: 57,}]}
         >
           <LinearGradient
             colors={["#FFFFFF", "#D9E9EC"]}
@@ -84,7 +84,7 @@ export default function Home({ navigation }) {
             <ScrollView
               contentContainerStyle={{
                 alignItems: "center",
-                paddingBottom: regions.length >= 1 ? 200 : 330,
+                paddingBottom: regions.length >= 1 ? 200 : 444,
               }}
             >
               <Modal

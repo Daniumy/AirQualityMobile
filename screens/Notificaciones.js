@@ -52,6 +52,7 @@ export default function Notificaciones({ navigation }) {
   const [concentracionAndOneSymptom, setConcentracionAndOneSymptom] =
     useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
   const { location } = useSelector((state) => state.GPSReducer);
   const {symptomsAdded} = useSelector((state) => state.symptomsReducer);
 
@@ -77,6 +78,7 @@ export default function Notificaciones({ navigation }) {
     const concentraciones = concentracionesDB.data();
     setConcentraciones(concentraciones);
     concentraciones ? setHayConcentraciones(true) : setHayConcentraciones(false);
+    setIsLoading2(false);
   }
   
   console.log(sintomas);
@@ -186,12 +188,8 @@ export default function Notificaciones({ navigation }) {
     return unhealthyConcentrations;
   }
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text> KHE </Text>
-      </View>
-    );
+  if (isLoading || isLoading2) {
+    return null;
   } else
     return (
       <>

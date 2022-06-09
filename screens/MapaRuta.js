@@ -36,7 +36,7 @@ export default function MapaRuta({ navigation }) {
     (state) => state.DestinyReducer
   );
   const dispatch = useDispatch();
-
+  console.log(REACT_APP_MAPVIEW_API);
   const defaultDestinyLocation = {
     latitude: 37.984047,
     longitude: -1.128575,
@@ -102,6 +102,10 @@ export default function MapaRuta({ navigation }) {
     destinyGlobalLocation.latitude = defaultDestinyLocation.latitude;
     destinyGlobalLocation.longitude = defaultDestinyLocation.longitude;
   }
+  let isGPSLocationInsideArea1 = isInsideArea1(
+    localRegion.latitude,
+    localRegion.longitude
+  );
   return (
     <SafeAreaView
       style={[GlobalStyles.AndroidSafeArea, GlobalStyles.SafeAreaBackground]}
@@ -171,18 +175,34 @@ export default function MapaRuta({ navigation }) {
       />
 
       <MapView
-        initialRegion={location.latitude ? location : defaultLocation}
+        initialRegion={
+          !localRegion.latitude
+            ? defaultLocation
+            : isGPSLocationInsideArea1
+            ? localRegion
+            : defaultLocation
+        }
         provider="google"
         style={styles.map}
-        region={localRegion.latitude ? localRegion : defaultLocation}
+        region={
+          !localRegion.latitude
+            ? defaultLocation
+            : isGPSLocationInsideArea1
+            ? localRegion
+            : defaultLocation
+        }
       >
         {renderOptimalRoute()}
         <Marker
           coordinate={{
-            latitude: localRegion.latitude
+            latitude: !localRegion.latitude
+              ? defaultLocation.latitude
+              : isGPSLocationInsideArea1
               ? localRegion.latitude
               : defaultLocation.latitude,
-            longitude: localRegion.longitude
+            longitude: !localRegion.longitude
+              ? defaultLocation.longitude
+              : isGPSLocationInsideArea1
               ? localRegion.longitude
               : defaultLocation.longitude,
           }}
@@ -203,9 +223,7 @@ export default function MapaRuta({ navigation }) {
                 latitude: 37.9854323,
                 longitude: -1.1290433,
               });
-              alert(
-                "¡Parece que te has salido del área disponible!"
-              );
+              alert("¡Parece que te has salido del área disponible!");
             } else {
               setLocalRegion({
                 ...localRegion,
@@ -238,9 +256,7 @@ export default function MapaRuta({ navigation }) {
                 latitude: defaultDestinyLocation.latitude,
                 longitude: defaultDestinyLocation.longitude,
               });
-              alert(
-                "¡Parece que te has salido del área disponible!"
-              );
+              alert("¡Parece que te has salido del área disponible!");
             } else {
               setLocalDestinoRegion({
                 ...destinyGlobalLocation,

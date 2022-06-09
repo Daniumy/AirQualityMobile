@@ -130,12 +130,12 @@ export default function Formulario({ navigation }) {
   }
   function checkIfCamposIncorrectos() {
     if (
-      !espirometria.comentario ||
+      (!espirometria.comentario ||
       !espirometria.fvc ||
-      !espirometria.fev ||
+      !espirometria.fev && espirometria.selectedEspirometria == "Si")||
       regExp.test(espirometria.fev) ||
       regExp.test(espirometria.fvc) ||
-      !espirometria.noRealizadaMotivo
+      (!espirometria.noRealizadaMotivo && espirometria.selectedEspirometria == "No")
     ) {
       return true;
     } else if (
@@ -238,7 +238,7 @@ export default function Formulario({ navigation }) {
                   multiline={true}
                   value={espirometria.comentario}
                 />
-                {espirometria.comentario == null && intentoDeEnvioDeSíntomas && (
+                {espirometria.comentario == null && intentoDeEnvioDeSíntomas && espirometria.selectedEspirometria == "Si" &&(
                   <Text
                     style={{
                       color: "red",
@@ -292,7 +292,7 @@ export default function Formulario({ navigation }) {
                   </View>
                 </View>
                 {(espirometria.fev == null || espirometria.fvc == null) &&
-                  intentoDeEnvioDeSíntomas && (
+                  intentoDeEnvioDeSíntomas && espirometria.selectedEspirometria == "Si" && (
                     <Text
                       style={{
                         color: "red",
@@ -306,7 +306,7 @@ export default function Formulario({ navigation }) {
                   )}
                 {(regExp.test(espirometria.fev) ||
                   regExp.test(espirometria.fvc)) &&
-                  intentoDeEnvioDeSíntomas && (
+                  intentoDeEnvioDeSíntomas &&(
                     <Text
                       style={{
                         color: "red",
@@ -335,8 +335,7 @@ export default function Formulario({ navigation }) {
                   value={espirometria.noRealizadaMotivo}
                 />
                 {espirometria.noRealizadaMotivo == null &&
-                  espirometria.selectedEspirometria == "Si" &&
-                  intentoDeEnvioDeSíntomas && (
+                  intentoDeEnvioDeSíntomas && espirometria.selectedEspirometria == "No" && (
                     <Text
                       style={{
                         color: "red",

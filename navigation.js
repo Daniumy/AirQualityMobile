@@ -14,9 +14,13 @@ import Registro from "./screens/Registro";
 import ComprobarSintomas from "./screens/ComprobarSintomas";
 import { auth } from "./firebase";
 import { icons } from "./constants";
+import { REACT_APP_MAPVIEW_API } from "@env";
+
 
 export default function RootNavigation() {
   const Stack = createStackNavigator();
+
+  console.log(REACT_APP_MAPVIEW_API);
 
   const screenOptions = {
     headerShown: false,

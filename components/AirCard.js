@@ -48,8 +48,6 @@ export default function AirCard({ region, withExtra, removeCard }) {
   const [currentWeather, setCurrentWeather] = useState(null);
 
   function getTodaysAvgPm10Aqi(aqisArray) {
-    console.log(aqisArray);
-
     var date = new Date().getDate();
     date = date.toString().padStart(2, "0");
     var month = new Date().getMonth() + 1;
@@ -57,7 +55,6 @@ export default function AirCard({ region, withExtra, removeCard }) {
     var year = new Date().getFullYear();
     var fecha = year + "-" + month + "-" + date;
     for (let i = 0; i < aqisArray.length; i++) {
-      console.log(aqisArray[i].day + " " + fecha);
       if (aqisArray[i].day == fecha) {
         return aqisArray[i].avg;
       }
@@ -128,7 +125,9 @@ export default function AirCard({ region, withExtra, removeCard }) {
       highestAqi.pollutant
     );
     let partialAqis = [];
+    let coIsShownInMg = false;
     if (isInsideArea1(region.latitude, region.longitude)) {
+      console.log("entro en el if en el aircard");
       pm10 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
         : partialAqis.push(undefined);
@@ -144,7 +143,26 @@ export default function AirCard({ region, withExtra, removeCard }) {
       o3 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
         : partialAqis.push(undefined);
+        partialAqis[0] = Math.round(aqiToConcentration(partialAqis[0], "pm10"));
+        partialAqis[1] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[1], "so2"),
+          "so2"
+        ));
+        partialAqis[2] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[2], "co"),
+          "co"
+        ));
+        partialAqis[3] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[3], "no2"),
+          "no2"
+        ));
+        partialAqis[4] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[4], "o3"),
+          "o3"
+        ));
+        
     } else {
+      coIsShownInMg = true;
       pm10 !== undefined
         ? partialAqis.push(
             getTodaysAvgPm10Aqi(currentAqiData.data.forecast.daily.pm10)
@@ -163,7 +181,6 @@ export default function AirCard({ region, withExtra, removeCard }) {
         ? partialAqis.push(o3.v * 0.556)
         : partialAqis.push(undefined);
     }
-    console.log(region.direccion);
     return (
       <>
         <View style={[GlobalStyles.AirCardContainer, { height: region.direccion.length >= 61  ? 320 : 292 }]}>
@@ -173,7 +190,7 @@ export default function AirCard({ region, withExtra, removeCard }) {
             weatherIconURL={weatherIconUrl}
           />
           <Direccion address={region.direccion} />
-          <BottomCard elementos={partialAqis} />
+          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg}/>
         </View>
         {withExtra && (
           <ExtraBottom
@@ -342,18 +359,12 @@ const Direccion = ({ address }) => (
   </>
 );
 
-const BottomCard = ({ elementos }) => {
+const BottomCard = ({ elementos, coInMg }) => {
   let elementoPM10 = <></>;
   let elementoSO2 = <></>;
   let elementoCO = <></>;
   let elementoNO2 = <></>;
   let elementoO3 = <></>;
-
-  elementos[0] = aqiToConcentration(elementos[0], "pm10");
-  elementos[1] = ppbToMicrogram(aqiToConcentration(elementos[1], "so2"), "so2");
-  elementos[2] = ppbToMicrogram(aqiToConcentration(elementos[2], "co"), "co");
-  elementos[3] = ppbToMicrogram(aqiToConcentration(elementos[3], "no2"), "no2");
-  elementos[4] = ppbToMicrogram(aqiToConcentration(elementos[4], "o3"), "o3");
 
   elementoPM10 = (
     <View
@@ -421,8 +432,7 @@ const BottomCard = ({ elementos }) => {
       </Text>
     </View>
   );
-  // if (elementos[2] == "undefined") elementoCOUndefined = true;
-  // else
+
   elementoCO = (
     <View
       style={{
@@ -451,12 +461,11 @@ const BottomCard = ({ elementos }) => {
         {aqiLevelCO(elementos[2]) != AQI_LEVEL.unknown
           ? "\n\n" + Math.round(elementos[2]) + "\n"
           : ""}
-        {aqiLevelCO(elementos[2]) != AQI_LEVEL.unknown ? "μg/m³" : ""}
+        {aqiLevelCO(elementos[2]) == AQI_LEVEL.unknown ? "" : coInMg ? "mg/m³" : "μg/m³"}
       </Text>
     </View>
   );
-  // if (typeof elementos[3] == "undefined") elementoNO2Undefined = true;
-  // else
+
   elementoNO2 = (
     <View
       style={{

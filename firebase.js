@@ -5,6 +5,9 @@ import {REACT_APP_FIREBASE_API} from "@env";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+
+console.log(REACT_APP_FIREBASE_API);
+
 const firebaseConfig = {
   apiKey: REACT_APP_FIREBASE_API,
   authDomain: "airelocal-auth.firebaseapp.com",

@@ -210,7 +210,7 @@ function aqiToConcentration(aqi, pollutant){
     if (aqi < 0){
         return 0
     }
-
+    
     var pollutantTable = null
 
     //obtenemos la tabla del contaminante en cuestión

@@ -21,7 +21,7 @@ import { REACT_APP_MAPVIEW_API } from "@env";
 
 export default function Mapa({ navigation }) {
   const { location } = useSelector((state) => state.GPSReducer);
-
+  console.log(REACT_APP_MAPVIEW_API +"\n\n\n\n\n\n\n\n\n\n\n\n");
   const defaultLocation = {
     latitude: 37.9922399,
     longitude: -1.1306544,
@@ -39,12 +39,7 @@ export default function Mapa({ navigation }) {
     latitudeDelta: 0.015,
     longitudeDelta: 0.015,
   });
-  console.log("location");
-  console.log(location);
-  console.log("regions");
-  console.log(regions);
-  console.log("localRegion");
-  console.log(localRegion);
+
 
   async function getRegionesBBDD() {
     const regionesDB = await db
@@ -108,6 +103,7 @@ export default function Mapa({ navigation }) {
   }
 
   const [modalVisible, setModalVisible] = useState(false);
+  console.log(localRegion);
   return (
     <SafeAreaView
       style={[

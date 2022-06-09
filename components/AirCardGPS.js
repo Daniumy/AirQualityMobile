@@ -56,15 +56,13 @@ export default function AirCardGPS({ setModalError }) {
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [extraActivo, setExtraActivo] = useState(false);
 
-  console.log(currentAqiData);
-
   function getTodaysAvgPm10Aqi(aqisArray) {
     var date = new Date().getDate();
     date = date.toString().padStart(2, "0");
     var month = new Date().getMonth() + 1;
     month = month.toString().padStart(2, "0");
     var year = new Date().getFullYear();
-    var fecha = year + "/" + month + "/" + date;
+    var fecha = year + "-" + month + "-" + date;
     for (let i = 0; i < aqisArray.length; i++) {
       if (aqisArray[i].day == fecha) {
         return aqisArray[i].avg;
@@ -189,7 +187,7 @@ export default function AirCardGPS({ setModalError }) {
     );
 
     let partialAqis = [];
-
+    let coIsShownInMg = false;
     if (
       isInsideArea1(
         currentLocation.coords.latitude,
@@ -212,28 +210,27 @@ export default function AirCardGPS({ setModalError }) {
         ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
         : partialAqis.push(undefined);
 
-      partialAqis[0] = aqiToConcentration(partialAqis[0], "pm10");
-      partialAqis[1] = ppbToMicrogram(
-        aqiToConcentration(partialAqis[1], "so2"),
-        "so2"
-      );
-      partialAqis[2] = ppbToMicrogram(
-        aqiToConcentration(partialAqis[2], "co"),
-        "co"
-      );
-      partialAqis[3] = ppbToMicrogram(
-        aqiToConcentration(partialAqis[3], "no2"),
-        "no2"
-      );
-      partialAqis[4] = ppbToMicrogram(
-        aqiToConcentration(partialAqis[4], "o3"),
-        "o3"
-      );
+        partialAqis[0] = Math.round(aqiToConcentration(partialAqis[0], "pm10"));
+        partialAqis[1] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[1], "so2"),
+          "so2"
+        ));
+        partialAqis[2] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[2], "co"),
+          "co"
+        ));
+        partialAqis[3] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[3], "no2"),
+          "no2"
+        ));
+        partialAqis[4] = Math.round(ppbToMicrogram(
+          aqiToConcentration(partialAqis[4], "o3"),
+          "o3"
+        ));
     } else {
+      coIsShownInMg = true;
       pm10 !== undefined
-        ? partialAqis.push(
-            getTodaysAvgPm10Aqi(currentAqiData.data.forecast.daily.pm10)
-          )
+        ? partialAqis.push(pm10.v)
         : partialAqis.push(undefined);
       so2 !== undefined
         ? partialAqis.push(so2.v * 0.286)
@@ -252,7 +249,7 @@ export default function AirCardGPS({ setModalError }) {
 
     return (
       <>
-        <View style={GlobalStyles.AirCardContainer}>
+        <View style={[GlobalStyles.AirCardGPSContainer,{height: 300}]}>
           <TopCard
             aqi={globalAqi != undefined ? globalAqi : "?"}
             weatherTemp={weatherTemp}
@@ -264,12 +261,8 @@ export default function AirCardGPS({ setModalError }) {
               calle={currentAddress.street}
             />
           )}
-          <BottomCard elementos={partialAqis} />
+          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg}/>
         </View>
-        <ExtraBottom
-          extraActivo={extraActivo}
-          setExtraActivo={setExtraActivo}
-        />
       </>
     );
   } else
@@ -287,52 +280,6 @@ export default function AirCardGPS({ setModalError }) {
             size={30}
             // color={focused ? "red" : "gray"}
           ></MaterialCommunityIcons>
-        </TouchableOpacity>
-      </View>
-    );
-}
-
-function ExtraBottom({ extraActivo, setExtraActivo }) {
-  if (!extraActivo)
-    return (
-      <TouchableOpacity
-        style={{
-          elevation: 10,
-          backgroundColor: "white",
-          width: "50%",
-          alignSelf: "center",
-          alignItems: "center",
-          borderBottomRightRadius: 100,
-          borderBottomLeftRadius: 100,
-        }}
-        onPress={() => setExtraActivo(true)}
-      >
-        <FontAwesome5 name="angle-down" size={30} color="black"></FontAwesome5>
-      </TouchableOpacity>
-    );
-  else
-    return (
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          elevation: 10,
-          backgroundColor: "white",
-          width: deviceWidth - 100,
-          borderBottomRightRadius: 50,
-          borderBottomLeftRadius: 50,
-          height: 70,
-        }}
-      >
-        <TouchableOpacity style={{ marginLeft: 30, marginTop: 5, padding: 10 }}>
-          <FontAwesome5 name="trash-alt" size={30} color="red"></FontAwesome5>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginTop: 20, padding: 10 }}
-          onPress={() => setExtraActivo(false)}
-        >
-          <FontAwesome5 name="angle-up" size={30} color="black"></FontAwesome5>
         </TouchableOpacity>
       </View>
     );
@@ -431,13 +378,13 @@ const Direccion = ({ ciudad, calle }) => (
   </>
 );
 
-const BottomCard = ({ elementos }) => {
+const BottomCard = ({ elementos, coInMg }) => {
   let elementoPM10 = <></>;
   let elementoSO2 = <></>;
   let elementoCO = <></>;
   let elementoNO2 = <></>;
   let elementoO3 = <></>;
-
+  console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+coInMg)
   elementoPM10 = (
     <View
       style={{
@@ -533,7 +480,7 @@ const BottomCard = ({ elementos }) => {
         {aqiLevelCO(elementos[2]) != AQI_LEVEL.unknown
           ? "\n\n" + Math.round(elementos[2]) + "\n"
           : ""}
-        {aqiLevelCO(elementos[2]) != AQI_LEVEL.unknown ? "μg/m³" : ""}
+        {aqiLevelCO(elementos[2]) == AQI_LEVEL.unknown ? "" : coInMg ? "mg/m³" : "μg/m³"}
       </Text>
     </View>
   );
