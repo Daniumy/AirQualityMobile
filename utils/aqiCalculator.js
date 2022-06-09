@@ -207,7 +207,7 @@ function ppbToMicrogram(value, pollutant){
 //Conversion de AQI a concentracion
 function aqiToConcentration(aqi, pollutant){
 
-    if (aqi < 0){
+    if (aqi < 0 || aqi == "undefined"){
         return 0
     }
     

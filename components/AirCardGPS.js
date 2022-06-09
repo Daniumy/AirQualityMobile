@@ -108,6 +108,8 @@ export default function AirCardGPS({ setModalError }) {
   }, [currentLocation]);
 
   async function updateGPSConcentration(partialAqis) {
+    console.log("AYMIMADRE EL BICHO");
+    console.log(partialAqis);
     const sintomasDB = await db
       .collection("concentraciones")
       .doc(auth.currentUser.email)
@@ -196,60 +198,56 @@ export default function AirCardGPS({ setModalError }) {
     ) {
       pm10 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       so2 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, so2.v, "so2"))
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       co !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, co.v, "co"))
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       no2 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, no2.v, "no2"))
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       o3 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
 
-        partialAqis[0] = Math.round(aqiToConcentration(partialAqis[0], "pm10"));
-        partialAqis[1] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[1], "so2"),
-          "so2"
-        ));
-        partialAqis[2] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[2], "co"),
-          "co"
-        ));
-        partialAqis[3] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[3], "no2"),
-          "no2"
-        ));
-        partialAqis[4] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[4], "o3"),
-          "o3"
-        ));
+      partialAqis[0] = Math.round(aqiToConcentration(partialAqis[0], "pm10"));
+      partialAqis[1] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[1], "so2"), "so2")
+      );
+      partialAqis[2] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[2], "co"), "co")
+      );
+      partialAqis[3] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[3], "no2"), "no2")
+      );
+      partialAqis[4] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[4], "o3"), "o3")
+      );
     } else {
       coIsShownInMg = true;
       pm10 !== undefined
         ? partialAqis.push(pm10.v)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       so2 !== undefined
         ? partialAqis.push(so2.v * 0.286)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       co !== undefined
         ? partialAqis.push(co.v * 0.001 * 10)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       no2 !== undefined
         ? partialAqis.push(no2.v * 0.5)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       o3 !== undefined
         ? partialAqis.push(o3.v * 0.556)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
     }
     updateGPSConcentration(partialAqis);
 
     return (
       <>
-        <View style={[GlobalStyles.AirCardGPSContainer,{height: 300}]}>
+        <View style={[GlobalStyles.AirCardGPSContainer, { height: 300 }]}>
           <TopCard
             aqi={globalAqi != undefined ? globalAqi : "?"}
             weatherTemp={weatherTemp}
@@ -261,7 +259,7 @@ export default function AirCardGPS({ setModalError }) {
               calle={currentAddress.street}
             />
           )}
-          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg}/>
+          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg} />
         </View>
       </>
     );
@@ -384,7 +382,6 @@ const BottomCard = ({ elementos, coInMg }) => {
   let elementoCO = <></>;
   let elementoNO2 = <></>;
   let elementoO3 = <></>;
-  console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+coInMg)
   elementoPM10 = (
     <View
       style={{
@@ -480,7 +477,11 @@ const BottomCard = ({ elementos, coInMg }) => {
         {aqiLevelCO(elementos[2]) != AQI_LEVEL.unknown
           ? "\n\n" + Math.round(elementos[2]) + "\n"
           : ""}
-        {aqiLevelCO(elementos[2]) == AQI_LEVEL.unknown ? "" : coInMg ? "mg/m³" : "μg/m³"}
+        {aqiLevelCO(elementos[2]) == AQI_LEVEL.unknown
+          ? ""
+          : coInMg
+          ? "mg/m³"
+          : "μg/m³"}
       </Text>
     </View>
   );
