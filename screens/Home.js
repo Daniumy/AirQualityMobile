@@ -36,14 +36,19 @@ export default function Home({ navigation }) {
   }, [isFocused]);
 
   async function actualizarRegionesBBDD() {
+    console.log(auth.currentUser.email)
     const regionesDB = await db
       .collection("localizaciones")
       .doc(auth.currentUser.email)
       .get();
     const regiones = regionesDB.data();
-    regiones ? setRegions(Object.values(regiones)) : null;
+    console.log("dentro del get en si")
+    console.log(regiones);
+    regiones ? setRegions(Object.values(regiones)) : setRegions([]);
     setIsLoading(false);
   }
+  console.log("fuera del get en si")
+  console.log(regions);
 
   function removeCard(value) {
     db.collection("localizaciones")
@@ -84,7 +89,7 @@ export default function Home({ navigation }) {
             <ScrollView
               contentContainerStyle={{
                 alignItems: "center",
-                paddingBottom: regions.length >= 1 ? 200 : 444,
+                paddingBottom: regions.length < 1 ? 444 : 200,
               }}
             >
               <Modal

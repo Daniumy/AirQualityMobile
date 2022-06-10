@@ -290,6 +290,7 @@ const TopCard = ({ aqi, weatherTemp, weatherIconURL }) => (
         width: "100%",
         backgroundColor: aqiColor(aqi),
         height: "20%",
+        top:-4,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
       }}
