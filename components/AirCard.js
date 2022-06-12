@@ -253,7 +253,7 @@ function ExtraBottom({ extraActivo, setExtraActivo, removeCard, region, id }) {
             top: 3,
           }}
         >
-          <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
+          <Text style={{ color: "white", textAlign: "center", fontWeight: "bold", fontSize: deviceWidth < 375 ? 13 : 16 }}>
             Eliminar localización
           </Text>
         </TouchableOpacity>

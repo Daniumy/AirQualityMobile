@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   Image,
+  Dimensions,
 } from "react-native";
 import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -17,6 +18,7 @@ export default function Login({ navigation }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loginButtonPressed, setLoginButtonPressed] = React.useState(false);
+  const deviceWidth = Math.round(Dimensions.get("window").width);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -56,8 +58,8 @@ export default function Login({ navigation }) {
         <Image
           source={AppIcon}
           style={{
-            width: 150,
-            height: 150,
+            width: deviceWidth < 375 ? 100 : 150,
+            height: deviceWidth < 375 ? 100 : 150,
             alignSelf: "center",
             top: -50,
           }}

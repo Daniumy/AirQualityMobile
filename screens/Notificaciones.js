@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyles from "../components/GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -36,8 +36,8 @@ import BottomTabs from "../components/BottomTabs";
 import { auth, db } from "../firebase";
 import { AQI_LEVEL, AQI_LEVEL_ELEMENT } from "../constants";
 
-
 export default function Notificaciones({ navigation }) {
+  const deviceWidth = Math.round(Dimensions.get("window").width);
   const [currentDate, setCurrentDate] = useState(null);
   const [disneaDia, setDisneaDia] = useState(null);
   const [disneaNoche, setDisneaNoche] = useState(null);
@@ -81,7 +81,6 @@ export default function Notificaciones({ navigation }) {
     setIsLoading2(false);
   }
   
-  console.log(sintomas);
   useEffect(() => {
     getSintomas();
   }, [symptomsAdded]);
@@ -217,7 +216,7 @@ export default function Notificaciones({ navigation }) {
             <ScrollView style={{ height: "100%" }}>
               {!haySintomas && (
                 <Alerta
-                  fontSize={15}
+                  fontSize={deviceWidth < 375 ? 13 : 15}
                   titleText={"Si rellenas el diario de síntomas de hoy"}
                   suggestionText={"Daremos alertas sobre ello"}
                   background="#e75480"
@@ -235,7 +234,7 @@ export default function Notificaciones({ navigation }) {
               )}
               {CertainLevelConcentration(AQI_LEVEL.unhealthy).length > 0 && (
                 <Alerta
-                  fontSize={15}
+                fontSize={deviceWidth < 375 ? 13 : 15}
                   titleText={`Por las concentraciones de ${CertainLevelConcentration(
                     AQI_LEVEL.unhealthy
                   ).join(", ")}`}
@@ -248,8 +247,8 @@ export default function Notificaciones({ navigation }) {
               )}
               {ThreeConcentrationsUnhealthy() && (
                 <Alerta
-                  fontSize={15}
-                  titleText={`Por una combinación deficiente de concentraciones:`}
+                fontSize={deviceWidth < 375 ? 13 : 15}
+                titleText={deviceWidth < 375 ? "Por una combinación deficiente \nde concentraciones:" : `Por una combinación deficiente de concentraciones:`}
                   suggestionText={
                     "No salgas sin mascarilla \n\u2022 Cierra ventana \n\u2022 No hagas ejercicio"
                   }
@@ -321,19 +320,19 @@ export default function Notificaciones({ navigation }) {
                   {isFreqCardiacaDangerous(freqCardiaca) && (
                     <Alerta
                       fontSize={14}
-                      titleText={"Por su frecuencia cardíaca se le recomienda:"}
+                      titleText={deviceWidth < 375 ? "Por su frecuencia cardíaca \nse le recomienda:" : "Por su frecuencia cardíaca se le recomienda:"}
                       suggestionText={"No salir de casa"}
                       background={colorFreqCardiaca(freqCardiaca)}
-                      height={80}
+                      height={deviceWidth < 375? 90 :80}
                     />
                   )}
                   {isNivelSueñoDangerous(dormido) && (
                     <Alerta
                       fontSize={15}
-                      titleText={"Debido a su grado sueño se le recomienda:"}
+                      titleText={deviceWidth < 375 ?"Debido a su grado sueño \nse le recomienda:": "Debido a su grado sueño se le recomienda:"}
                       suggestionText={"No salir de casa"}
                       background={colorNivelSueño(dormido)}
-                      height={80}
+                      height={deviceWidth < 375? 90 :80}
                     />
                   )}
                 </View>
@@ -382,7 +381,7 @@ const Alerta = ({
             marginTop: 5,
             marginLeft: 10,
             fontWeight: "bold",
-            fontSize: 20,
+            fontSize: fontSize+5,
           }}
         >
           {"\u2022"} {suggestionText}

@@ -24,7 +24,8 @@ export default function Configuracion({ navigation }) {
   const [modalInfoVisible, setModalInfoVisible] = useState(false);
   const [doctorUser, setDoctorUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  const deviceWidth = Math.round(Dimensions.get("window").width);
+  
   console.log(auth);
   const handleCerrarSesion = () => {
     auth
@@ -184,7 +185,7 @@ const ConfigField = ({ icon, text, onPress, accionOnPress }) => {
     >
       <FontAwesome
         name={icon}
-        size={40}
+        size={Math.round(Dimensions.get("window").width) < 375 ? 28 :40}
         color="#000080"
         style={{ textAlignVertical: "center", marginHorizontal: 10 }}
       ></FontAwesome>
@@ -193,7 +194,7 @@ const ConfigField = ({ icon, text, onPress, accionOnPress }) => {
           textAlignVertical: "center",
           fontSize: 30,
           fontWeight: "bold",
-          marginHorizontal: 10,
+          marginHorizontal: 6,
         }}
       >
         {text}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import GlobalStyles from "../components/GlobalStyles";
-import { SafeAreaView, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView, StyleSheet, ScrollView, Dimensions} from "react-native";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Divider } from "react-native-elements";
@@ -499,7 +499,7 @@ export default function Formulario({ navigation }) {
             top: "35%",
           }}
         >
-          <Text style={{ fontSize: 22 }}>
+          <Text style={{ fontSize: Math.round(Dimensions.get("window").width) < 375 ? 21 : 22 }}>
             ¡Ya has enviado los síntomas de hoy!
           </Text>
           <Text style={{ fontSize: 22 }}>{currentDate}</Text>
@@ -557,8 +557,8 @@ const Tos = ({ tos, setTos }) => (
       <Picker.Item label="5" value="5" />
       <Picker.Item label="6" value="6" />
       <Picker.Item label="7" value="7" />
-      <Picker.Item label="9" value="8" />
-      <Picker.Item label="8" value="9" />
+      <Picker.Item label="8" value="8" />
+      <Picker.Item label="9" value="9" />
       <Picker.Item label="10" value="10" />
     </Picker>
   </View>

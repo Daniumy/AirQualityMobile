@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   Image,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -19,7 +20,8 @@ export default function Registro({ navigation }) {
   const [password2, setPassword2] = useState("");
   const [rol, setRol] = useState("Paciente");
   const dispatch = useDispatch();
-
+  const deviceWidth = Math.round(Dimensions.get("window").width);
+  
   const handleRegistro = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
@@ -45,16 +47,16 @@ export default function Registro({ navigation }) {
         <Image
           source={AppIcon}
           style={{
-            width: 150,
-            height: 150,
+            width: deviceWidth < 375 ? 100 : 150,
+            height: deviceWidth < 375 ? 100 : 150,
             alignSelf: "center",
-            top: -50,
+            top: deviceWidth < 375 ? 0 : -40,
           }}
         ></Image>
         <Text
           style={{
             textAlign: "center",
-            fontSize: 40,
+            fontSize: deviceWidth < 375 ? 30 :40,
             fontWeight: "bold",
             color: "#000080",
             marginBottom: 10,
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: Math.round(Dimensions.get("window").width) < 375 ? 7 :10,
     borderRadius: 10,
     marginVertical: 10,
     borderColor: "#000080",
