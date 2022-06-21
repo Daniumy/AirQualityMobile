@@ -60,6 +60,9 @@ export default function Notificaciones({ navigation }) {
     if (!espirometria.fev || !espirometria.fvc) return null;
     return Math.max(espirometria.fev, espirometria.fvc);
   }
+  useEffect(() => {
+    getSintomas();
+  }, [symptomsAdded]);
 
   async function getSintomas() {
     const sintomasDB = await db
@@ -81,9 +84,6 @@ export default function Notificaciones({ navigation }) {
     setIsLoading2(false);
   }
   
-  useEffect(() => {
-    getSintomas();
-  }, [symptomsAdded]);
 
   useEffect(() => {
     getConcentraciones();

@@ -14,7 +14,7 @@ import GlobalStyles from "../components/GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import { Divider } from "react-native-elements";
 import HeaderTabs from "../components/HeaderTabs";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import BottomTabs from "../components/BottomTabs";
 import { auth } from "../firebase";
 import { db } from "../firebase";
@@ -26,7 +26,6 @@ export default function Configuracion({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const deviceWidth = Math.round(Dimensions.get("window").width);
   
-  console.log(auth);
   const handleCerrarSesion = () => {
     auth
       .signOut()
@@ -156,13 +155,13 @@ export default function Configuracion({ navigation }) {
               />
               <ConfigField
                 text="Cerrar sesión"
-                icon="sign-out"
+                icon="sign-out-alt"
                 accionOnPress={handleCerrarSesion}
               />
               {doctorUser && (
                 <ConfigField
                   text="Comprobar síntomas pacientes"
-                  icon="sign-out"
+                  icon="user-md"
                   accionOnPress={handleComprobarSíntomas}
                 />
               )}
@@ -183,12 +182,12 @@ const ConfigField = ({ icon, text, onPress, accionOnPress }) => {
         accionOnPress();
       }}
     >
-      <FontAwesome
+      <FontAwesome5
         name={icon}
         size={Math.round(Dimensions.get("window").width) < 375 ? 28 :40}
         color="#000080"
         style={{ textAlignVertical: "center", marginHorizontal: 10 }}
-      ></FontAwesome>
+      ></FontAwesome5>
       <Text
         style={{
           textAlignVertical: "center",

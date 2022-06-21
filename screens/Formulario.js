@@ -67,7 +67,6 @@ export default function Formulario({ navigation }) {
     setIntentoDeEnvioDeSíntomas(true);
     if (!checkIfCamposIncorrectos()) {
       addSymptomsToBBDD();
-      console.log("111111111111111111111111111111111111111111");
       handleSymptomsSent(true);
     }
   }
@@ -160,7 +159,6 @@ export default function Formulario({ navigation }) {
       var year = new Date().getFullYear();
       var fecha = date + "/" + month + "/" + year;
       setCurrentDate(fecha);
-      console.log("2222222222222222222222222222222");
       handleSymptomsSent(false);
     }
   }, []);

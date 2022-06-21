@@ -63,7 +63,6 @@ function isFreqCardiacaDangerous(val) {
 }
 
 function isSaturacionDangerous(val) {
-    console.log(val);
     return val < 85;
 }
 

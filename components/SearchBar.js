@@ -10,7 +10,6 @@ export default function SearchBar(props) {
       <GooglePlacesAutocomplete
         onPress={(data, details = null) => {
           addDireccion(data.description);
-          console.log(data);
         }}
         placeholder="Search"
         styles={{

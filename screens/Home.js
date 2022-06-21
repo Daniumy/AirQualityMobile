@@ -36,19 +36,14 @@ export default function Home({ navigation }) {
   }, [isFocused]);
 
   async function actualizarRegionesBBDD() {
-    console.log(auth.currentUser.email)
     const regionesDB = await db
       .collection("localizaciones")
       .doc(auth.currentUser.email)
       .get();
     const regiones = regionesDB.data();
-    console.log("dentro del get en si")
-    console.log(regiones);
     regiones ? setRegions(Object.values(regiones)) : setRegions([]);
     setIsLoading(false);
   }
-  console.log("fuera del get en si")
-  console.log(regions);
 
   function removeCard(value) {
     db.collection("localizaciones")
@@ -59,6 +54,8 @@ export default function Home({ navigation }) {
     setRegions((regions) =>
       regions.filter((region) => region.localizacion.direccion !== value)
     );
+    setIsLoading(true);
+    actualizarRegionesBBDD();
   }
   if (isLoading) {
     return null;

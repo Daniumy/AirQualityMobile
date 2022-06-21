@@ -21,7 +21,6 @@ import { REACT_APP_MAPVIEW_API } from "@env";
 
 export default function Mapa({ navigation }) {
   const { location } = useSelector((state) => state.GPSReducer);
-  console.log(REACT_APP_MAPVIEW_API +"\n\n\n\n\n\n\n\n\n\n\n\n");
   const defaultLocation = {
     latitude: 37.9922399,
     longitude: -1.1306544,
@@ -70,13 +69,16 @@ export default function Mapa({ navigation }) {
     let direccion = regionLocal.direccion;
     let aux = direccion.split(".");
     let direccionModificada = aux.join("");
+    let aux2 = direccionModificada.split("/");
+    let direccionModificada2 = aux2.join("-");
     regions.map((region, index) => {
-      if (region.localizacion.direccion === direccionModificada)
+      if (region.localizacion.direccion === direccionModificada2)
         repetido = true;
     });
+
     if (!repetido) {
       let nuevaRegion = {
-        direccion: direccionModificada,
+        direccion: direccionModificada2,
         latitude: regionLocal.latitude,
         longitude: regionLocal.longitude,
       };
@@ -103,7 +105,6 @@ export default function Mapa({ navigation }) {
   }
 
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(localRegion);
   return (
     <SafeAreaView
       style={[

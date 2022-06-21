@@ -6,7 +6,6 @@ import {REACT_APP_FIREBASE_API} from "@env";
 
 // Your web app's Firebase configuration
 
-console.log(REACT_APP_FIREBASE_API);
 
 const firebaseConfig = {
   apiKey: REACT_APP_FIREBASE_API,

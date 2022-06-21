@@ -43,7 +43,6 @@ export default function ComprobarSintomas({ navigation }) {
       (tempDate.getMonth() + 1) +
       "/" +
       tempDate.getFullYear();
-    console.log("el fDate se supone que es:" + fDate);
     setSelectedDate(fDate);
     getSintomasOfUser(fDate);
   }

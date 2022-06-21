@@ -33,7 +33,6 @@ export default function Login({ navigation }) {
   useEffect(() => {
     navigation.addListener("beforeRemove", (e) => {
       if (auth.currentUser) {
-        console.log(auth.currentUser?.email);
         return;
       }
       // Prevent default behavior of leaving the screen
@@ -47,7 +46,6 @@ export default function Login({ navigation }) {
       .then((userCredentials) => {
         const user = userCredentials.user;
         setLoginButtonPressed(!loginButtonPressed);
-        console.log("logged in with", user.email);
       })
       .catch((error) => alert(error.message));
   };

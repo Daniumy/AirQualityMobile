@@ -33,7 +33,7 @@ import {
   ppbToMicrogram,
 } from "../utils/aqiCalculator";
 import { REACT_APP_WEATHER_API, REACT_APP_AIRQ_API } from "@env";
-import { isInsideArea1 } from "../utils/optimalRouteFunctions";
+import { isInsideArea1, isInsideArea2 } from "../utils/optimalRouteFunctions";
 
 const WEATHER_API_KEY = REACT_APP_WEATHER_API;
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
@@ -46,21 +46,6 @@ export default function AirCard({ region, withExtra, removeCard }) {
   const [currentAqiData, setCurrentAqiData] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
-
-  function getTodaysAvgPm10Aqi(aqisArray) {
-    var date = new Date().getDate();
-    date = date.toString().padStart(2, "0");
-    var month = new Date().getMonth() + 1;
-    month = month.toString().padStart(2, "0");
-    var year = new Date().getFullYear();
-    var fecha = year + "-" + month + "-" + date;
-    for (let i = 0; i < aqisArray.length; i++) {
-      if (aqisArray[i].day == fecha) {
-        return aqisArray[i].avg;
-      }
-    }
-    return null;
-  }
 
   useEffect(() => {
     const airqUrl = `${BASE_AIRQ_URL}:${region.latitude};${region.longitude}/?token=${AIRQ_API_KEY}`;
@@ -95,6 +80,15 @@ export default function AirCard({ region, withExtra, removeCard }) {
     fetchData();
   }, []);
 
+  function getHigherAqiFromPartialIndexes(partialIndexes) {
+    let higherAqi = 0;
+    partialIndexes.forEach((index) => {
+      if (index > higherAqi) {
+        higherAqi = index;
+      }
+    });
+    return higherAqi;
+  }
   if (
     currentAqiData != null &&
     currentWeather != null &&
@@ -118,16 +112,16 @@ export default function AirCard({ region, withExtra, removeCard }) {
     let co = currentAqiData.data.iaqi.co;
 
     let highestAqi = maxAqi(currentAqiData.data.iaqi);
-    let globalAqi = calculateAqi(
-      lat,
-      lng,
-      highestAqi.maxValue,
-      highestAqi.pollutant
-    );
+    let globalAqi;
     let partialAqis = [];
     let coIsShownInMg = false;
-    if (isInsideArea1(region.latitude, region.longitude)) {
-      console.log("entro en el if en el aircard");
+    if (isInsideArea2(region.latitude, region.longitude)) {
+      globalAqi = calculateAqi(
+        lat,
+        lng,
+        highestAqi.maxValue,
+        highestAqi.pollutant
+      );
       pm10 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
         : partialAqis.push(undefined);
@@ -143,30 +137,23 @@ export default function AirCard({ region, withExtra, removeCard }) {
       o3 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, o3.v, "o3"))
         : partialAqis.push(undefined);
-        partialAqis[0] = Math.round(aqiToConcentration(partialAqis[0], "pm10"));
-        partialAqis[1] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[1], "so2"),
-          "so2"
-        ));
-        partialAqis[2] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[2], "co"),
-          "co"
-        ));
-        partialAqis[3] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[3], "no2"),
-          "no2"
-        ));
-        partialAqis[4] = Math.round(ppbToMicrogram(
-          aqiToConcentration(partialAqis[4], "o3"),
-          "o3"
-        ));
-        
+      partialAqis[0] = Math.round(aqiToConcentration(partialAqis[0], "pm10"));
+      partialAqis[1] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[1], "so2"), "so2")
+      );
+      partialAqis[2] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[2], "co"), "co")
+      );
+      partialAqis[3] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[3], "no2"), "no2")
+      );
+      partialAqis[4] = Math.round(
+        ppbToMicrogram(aqiToConcentration(partialAqis[4], "o3"), "o3")
+      );
     } else {
       coIsShownInMg = true;
       pm10 !== undefined
-        ? partialAqis.push(
-            getTodaysAvgPm10Aqi(currentAqiData.data.forecast.daily.pm10)
-          )
+        ? partialAqis.push(pm10.v)
         : partialAqis.push(undefined);
       so2 !== undefined
         ? partialAqis.push(so2.v * 0.286)
@@ -180,17 +167,23 @@ export default function AirCard({ region, withExtra, removeCard }) {
       o3 !== undefined
         ? partialAqis.push(o3.v * 0.556)
         : partialAqis.push(undefined);
+      globalAqi = getHigherAqiFromPartialIndexes(partialAqis);
     }
     return (
       <>
-        <View style={[GlobalStyles.AirCardContainer, { height: region.direccion.length >= 61  ? 320 : 292 }]}>
+        <View
+          style={[
+            GlobalStyles.AirCardContainer,
+            { height: region.direccion.length >= 61 ? 320 : 292 },
+          ]}
+        >
           <TopCard
             aqi={globalAqi != undefined ? globalAqi : "?"}
             weatherTemp={weatherTemp}
             weatherIconURL={weatherIconUrl}
           />
           <Direccion address={region.direccion} />
-          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg}/>
+          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg} />
         </View>
         {withExtra && (
           <ExtraBottom
@@ -253,7 +246,14 @@ function ExtraBottom({ extraActivo, setExtraActivo, removeCard, region, id }) {
             top: 3,
           }}
         >
-          <Text style={{ color: "white", textAlign: "center", fontWeight: "bold", fontSize: deviceWidth < 375 ? 13 : 16 }}>
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontWeight: "bold",
+              fontSize: deviceWidth < 375 ? 13 : 16,
+            }}
+          >
             Eliminar localización
           </Text>
         </TouchableOpacity>
@@ -461,7 +461,11 @@ const BottomCard = ({ elementos, coInMg }) => {
         {aqiLevelCO(elementos[2]) != AQI_LEVEL.unknown
           ? "\n\n" + Math.round(elementos[2]) + "\n"
           : ""}
-        {aqiLevelCO(elementos[2]) == AQI_LEVEL.unknown ? "" : coInMg ? "mg/m³" : "μg/m³"}
+        {aqiLevelCO(elementos[2]) == AQI_LEVEL.unknown
+          ? ""
+          : coInMg
+          ? "mg/m³"
+          : "μg/m³"}
       </Text>
     </View>
   );

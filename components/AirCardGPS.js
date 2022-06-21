@@ -37,7 +37,7 @@ import { setCurrentGPS } from "../redux/actions";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { auth, db } from "../firebase";
 import { REACT_APP_WEATHER_API, REACT_APP_AIRQ_API } from "@env";
-import { isInsideArea1 } from "../utils/optimalRouteFunctions";
+import { isInsideArea1, isInsideArea2 } from "../utils/optimalRouteFunctions";
 
 const deviceWidth = Math.round(Dimensions.get("window").width);
 const WEATHER_API_KEY = REACT_APP_WEATHER_API;
@@ -55,21 +55,6 @@ export default function AirCardGPS({ setModalError }) {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [extraActivo, setExtraActivo] = useState(false);
-
-  function getTodaysAvgPm10Aqi(aqisArray) {
-    var date = new Date().getDate();
-    date = date.toString().padStart(2, "0");
-    var month = new Date().getMonth() + 1;
-    month = month.toString().padStart(2, "0");
-    var year = new Date().getFullYear();
-    var fecha = year + "-" + month + "-" + date;
-    for (let i = 0; i < aqisArray.length; i++) {
-      if (aqisArray[i].day == fecha) {
-        return aqisArray[i].avg;
-      }
-    }
-    return null;
-  }
 
   useEffect(() => {
     (async () => {
@@ -107,29 +92,14 @@ export default function AirCardGPS({ setModalError }) {
     }
   }, [currentLocation]);
 
-  async function updateGPSConcentration(partialAqis) {
-    console.log("AYMIMADRE EL BICHO");
-    console.log(partialAqis);
-    const sintomasDB = await db
-      .collection("concentraciones")
-      .doc(auth.currentUser.email)
-      .set({
-        concentracion: partialAqis,
-      });
-  }
-
-  async function removeGPSConcentration() {
-    dispatch(
-      setCurrentGPS({
-        latitude: null,
-        longitude: null,
-      })
-    );
-
-    const sintomasDB = await db
-      .collection("concentraciones")
-      .doc(auth.currentUser.email)
-      .delete();
+  function getHigherAqiFromPartialIndexes(partialIndexes) {
+    let higherAqi = 0;
+    partialIndexes.forEach((index) => {
+      if (index > higherAqi) {
+        higherAqi = index;
+      }
+    });
+    return higherAqi;
   }
 
   async function fetchData(weatherUrl, airqUrl) {
@@ -154,10 +124,33 @@ export default function AirCardGPS({ setModalError }) {
       }
     } catch (error) {
       alert(
-        "Lo sentimos, ha ocurrido un error. Vuelva a intentarlo más tarde."
+        "Lo sentimos, ha ocurrido un error. Vuelva a intentarlo."
       );
       console.log(error);
     }
+  }
+
+  async function updateGPSConcentration(partialAqis) {
+    const sintomasDB = await db
+      .collection("concentraciones")
+      .doc(auth.currentUser.email)
+      .set({
+        concentracion: partialAqis,
+      });
+  }
+
+  async function removeGPSConcentration() {
+    dispatch(
+      setCurrentGPS({
+        latitude: null,
+        longitude: null,
+      })
+    );
+
+    const sintomasDB = await db
+      .collection("concentraciones")
+      .doc(auth.currentUser.email)
+      .delete();
   }
 
   if (
@@ -181,21 +174,21 @@ export default function AirCardGPS({ setModalError }) {
     let co = currentAqiData.data.iaqi.co;
 
     let highestAqi = maxAqi(currentAqiData.data.iaqi);
-    let globalAqi = calculateAqi(
-      lat,
-      lng,
-      highestAqi.maxValue,
-      highestAqi.pollutant
-    );
-
+    let globalAqi;
     let partialAqis = [];
     let coIsShownInMg = false;
     if (
-      isInsideArea1(
+      isInsideArea2(
         currentLocation.coords.latitude,
         currentLocation.coords.longitude
       )
     ) {
+      globalAqi = calculateAqi(
+        lat,
+        lng,
+        highestAqi.maxValue,
+        highestAqi.pollutant
+      );
       pm10 !== undefined
         ? partialAqis.push(calculateAqi(lat, lng, pm10.v, "pm10"))
         : partialAqis.push("undefined");
@@ -229,19 +222,20 @@ export default function AirCardGPS({ setModalError }) {
       coIsShownInMg = true;
       pm10 !== undefined
         ? partialAqis.push(pm10.v)
-        : partialAqis.push("undefined");
+        : partialAqis.push(undefined);
       so2 !== undefined
         ? partialAqis.push(so2.v * 0.286)
-        : partialAqis.push("undefined");
+        : partialAqis.push(undefined);
       co !== undefined
         ? partialAqis.push(co.v * 0.001 * 10)
-        : partialAqis.push("undefined");
+        : partialAqis.push(undefined);
       no2 !== undefined
         ? partialAqis.push(no2.v * 0.5)
-        : partialAqis.push("undefined");
+        : partialAqis.push(undefined);
       o3 !== undefined
         ? partialAqis.push(o3.v * 0.556)
-        : partialAqis.push("undefined");
+        : partialAqis.push(undefined);
+      globalAqi = getHigherAqiFromPartialIndexes(partialAqis);
     }
     updateGPSConcentration(partialAqis);
 
@@ -253,10 +247,10 @@ export default function AirCardGPS({ setModalError }) {
             weatherTemp={weatherTemp}
             weatherIconURL={weatherIconUrl}
           />
-          {currentAddress.street && (
+          {currentAddress?.street && (
             <Direccion
               ciudad={currentAddress.city}
-              calle={currentAddress.street}
+              calle={currentAddress?.street}
             />
           )}
           <BottomCard elementos={partialAqis} coInMg={coIsShownInMg} />
@@ -290,7 +284,7 @@ const TopCard = ({ aqi, weatherTemp, weatherIconURL }) => (
         width: "100%",
         backgroundColor: aqiColor(aqi),
         height: "20%",
-        top:-4,
+        top: -4,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
       }}

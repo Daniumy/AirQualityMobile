@@ -52,8 +52,6 @@ function GPSReducer(state = initialGPSState, action) {
         },
       };
     default:
-      console.log("XDDDDDDDDDDDDDDDDDDDD")
-      console.log(state);
       return state;
   }
 }
