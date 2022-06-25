@@ -65,7 +65,7 @@ export default function ComprobarSintomas({ navigation }) {
     const sintomasDB = await db.collection("síntomas").doc(userSelected).get();
     const sintomas = sintomasDB.data();
 
-    if (sintomas[fechaSeleccionada]) {
+    if (sintomas && sintomas[fechaSeleccionada]) {
       setSintomasOfUser(sintomas[fechaSeleccionada].síntomas);
       setNoSintomasParaFecha(false);
     } else {

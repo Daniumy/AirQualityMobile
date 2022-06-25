@@ -35,6 +35,10 @@ export default function Configuracion({ navigation }) {
       .catch((error) => alert(error.message));
   };
 
+  const handleObtenerInformacion = () => {
+    navigation.navigate("Informacion");
+  }
+
   const handleComprobarSíntomas = () => {
     navigation.navigate("ComprobarSintomas");
   };
@@ -157,29 +161,29 @@ export default function Configuracion({ navigation }) {
                 <ConfigField
                   text="Acerca de AireLocal"
                   icon="users"
-                  size={28}
+                  size={26}
                   heightProp={100}
                   accionOnPress={() => setModalInfoVisible(true)}
                 />
                 <ConfigField
                   text="Cerrar sesión"
                   icon="sign-out-alt"
-                  size={28}
+                  size={26}
                   heightProp={100}
                   accionOnPress={handleCerrarSesion}
                 />
                 <ConfigField
-                  text="Obtener información sobre los contaminantes"
-                  size={26}
+                  text="Obtener información           sobre los contaminantes"
+                  size={24}
                   icon="sign-out-alt"
                   heightProp={100}
-                  accionOnPress={handleCerrarSesion}
+                  accionOnPress={handleObtenerInformacion}
                 />
                 {doctorUser && (
                   <ConfigField
                     text="Comprobar síntomas pacientes"
                     icon="user-md"
-                    size={28}
+                    size={26}
                     heightProp={100}
                     accionOnPress={handleComprobarSíntomas}
                   />
