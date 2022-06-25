@@ -36,6 +36,7 @@ export default function MapaRuta({ navigation }) {
     (state) => state.DestinyReducer
   );
   const dispatch = useDispatch();
+  console.log(REACT_APP_MAPVIEW_API);
   const defaultDestinyLocation = {
     latitude: 37.984047,
     longitude: -1.128575,

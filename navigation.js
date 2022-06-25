@@ -12,6 +12,7 @@ import Configuracion from "./screens/Configuracion";
 import Login from "./screens/Login";
 import Registro from "./screens/Registro";
 import ComprobarSintomas from "./screens/ComprobarSintomas";
+import InformacionSobreContaminantes from "./screens/InformacionSobreContaminantes";
 import { auth } from "./firebase";
 import { icons } from "./constants";
 import { REACT_APP_MAPVIEW_API } from "@env";
@@ -19,8 +20,6 @@ import { REACT_APP_MAPVIEW_API } from "@env";
 
 export default function RootNavigation() {
   const Stack = createStackNavigator();
-
-  console.log(REACT_APP_MAPVIEW_API);
 
   const screenOptions = {
     headerShown: false,
@@ -62,6 +61,7 @@ export default function RootNavigation() {
         <Stack.Screen name="MapaRuta" component={MapaRuta} />
         <Stack.Screen name="Notificaciones" component={Notificaciones} />
         <Stack.Screen name="Configuracion" component={Configuracion} />
+        <Stack.Screen name="Informacion" component={InformacionSobreContaminantes} />
       </Stack.Navigator>
     </NavigationContainer>
   );

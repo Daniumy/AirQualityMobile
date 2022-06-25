@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import GlobalStyles from "./GlobalStyles";
@@ -54,7 +55,7 @@ export default function AirCardGPS({ setModalError }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [locationEnabled, setLocationEnabled] = useState(false);
-  const [extraActivo, setExtraActivo] = useState(false);
+  const [fetchingError, setFetchingError] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -122,11 +123,9 @@ export default function AirCardGPS({ setModalError }) {
       } else {
         setErrorMessage(result2.message);
       }
+      setFetchingError(false);
     } catch (error) {
-      alert(
-        "Lo sentimos, ha ocurrido un error. Vuelva a intentarlo."
-      );
-      console.log(error);
+      setFetchingError(true);
     }
   }
 
@@ -158,7 +157,8 @@ export default function AirCardGPS({ setModalError }) {
     currentWeather != null &&
     typeof currentAqiData.data.iaqi !== "undefined" &&
     currentLocation !== null &&
-    currentAddress !== null
+    currentAddress !== null &&
+    !fetchingError
   ) {
     const weatherIcon = currentWeather.weather[0].icon;
     const weatherTemp = Math.round(currentWeather.main.temp);
@@ -243,21 +243,44 @@ export default function AirCardGPS({ setModalError }) {
       <>
         <View style={[GlobalStyles.AirCardGPSContainer, { height: 300 }]}>
           <TopCard
-            aqi={globalAqi != undefined ? globalAqi : "?"}
+            aqi={globalAqi != undefined ? Math.round(globalAqi) : "?"}
             weatherTemp={weatherTemp}
             weatherIconURL={weatherIconUrl}
           />
-          {currentAddress?.street && (
+          {currentAddress.street && (
             <Direccion
               ciudad={currentAddress.city}
-              calle={currentAddress?.street}
+              calle={
+                currentAddress.street
+                  ? currentAddress.street
+                  : "Dirección no encontrada"
+              }
             />
           )}
-          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg} />
+          <BottomCard
+            elementos={partialAqis}
+            coInMg={coIsShownInMg}
+          />
         </View>
       </>
     );
-  } else
+  } else if (fetchingError)
+    return (
+      <View style={GlobalStyles.AirCardGPSContainer}>
+        <Text>No se ha podido obtener la calidad del aire</Text>
+        <Text>del servidor, prueba de nuevo. </Text>
+        <TouchableOpacity
+          style={{ paddingHorizontal: 12, marginTop: 10 }}
+          onPress={() => setLocationEnabled(!locationEnabled)}
+        >
+          <MaterialCommunityIcons
+            name="restart"
+            size={30}
+          ></MaterialCommunityIcons>
+        </TouchableOpacity>
+      </View>
+    );
+  else
     return (
       <View style={GlobalStyles.AirCardGPSContainer}>
         <Text>Si activas la ubicación, podremos automáticamente</Text>
@@ -371,7 +394,7 @@ const Direccion = ({ ciudad, calle }) => (
   </>
 );
 
-const BottomCard = ({ elementos, coInMg }) => {
+const BottomCard = ({ elementos, coInMg}) => {
   let elementoPM10 = <></>;
   let elementoSO2 = <></>;
   let elementoCO = <></>;

@@ -7,7 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   Dimensions,
-  Image
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyles from "../components/GlobalStyles";
@@ -25,7 +25,7 @@ export default function Configuracion({ navigation }) {
   const [doctorUser, setDoctorUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const deviceWidth = Math.round(Dimensions.get("window").width);
-  
+
   const handleCerrarSesion = () => {
     auth
       .signOut()
@@ -42,7 +42,7 @@ export default function Configuracion({ navigation }) {
   useEffect(() => {
     isUserADoctor();
   }, []);
-  
+
   async function isUserADoctor() {
     const usuarioDB = await db
       .collection("usuarios")
@@ -60,138 +60,158 @@ export default function Configuracion({ navigation }) {
 
   if (isLoading) {
     return null;
-  }
-  else
-  return (
-    <>
-      <SafeAreaView
-        style={[
-          GlobalStyles.AndroidSafeArea,
-          GlobalStyles.SafeAreaBackground,
-          { marginBottom: 57 },
-        ]}
-      >
-        {modalInfoVisible && (
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalInfoVisible}
-            onRequestClose={() => {
-              setModalInfoVisible(false);
+  } else
+    return (
+      <>
+        <SafeAreaView
+          style={[
+            GlobalStyles.AndroidSafeArea,
+            GlobalStyles.SafeAreaBackground,
+            { marginBottom: 57 },
+          ]}
+        >
+          {modalInfoVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalInfoVisible}
+              onRequestClose={() => {
+                setModalInfoVisible(false);
+              }}
+            >
+              <View style={styles.centeredView}>
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    height: "50%",
+                    width: "85%",
+                  }}
+                >
+                  <Text style={{ margin: 15, textAlign: "center" }}>
+                    <Text style={{ fontSize: 15 }}>
+                      AireLocal es una aplicación creada por Daniel Maestre
+                      Yepes siendo esta su proyecto de TFG del año 2021/2022.
+                      {"\n"}
+                      <Text style={{ fontWeight: "bold" }}>
+                        Los objetivos de la aplicación son:
+                      </Text>
+                      {"\n"}
+                      {"\n"}
+                    </Text>
+                    {"\u2022"} Proporcionar a los usuarios información sobre los
+                    niveles de contaminación del aire, permitiéndoles{" "}
+                    <Text style={{ fontWeight: "bold" }}>
+                      guardar sitios como favoritos
+                    </Text>{" "}
+                    para no tener que buscarlos siempre.
+                    {"\n"}
+                    {"\n"}
+                    {"\u2022"} Crear{" "}
+                    <Text style={{ fontWeight: "bold" }}>rutas óptimas</Text>{" "}
+                    con concentraciones bajas de contaminación{"\n"}
+                    {"\n"}
+                    {"\u2022"} Proporcionar un{" "}
+                    <Text style={{ fontWeight: "bold" }}>
+                      diario de síntomas
+                    </Text>{" "}
+                    para que el paciente rellene los datos y se le proporcione
+                    consejos y/o alertas respecto a su información.
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => setModalInfoVisible(false)}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Ok
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          )}
+          <LinearGradient
+            colors={["#FFFFFF", "#D9E9EC"]}
+            styles={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <View style={styles.centeredView}>
-              <View
-                style={{
-                  backgroundColor: "white",
-                  height: "50%",
-                  width: "85%",
-                }}
-              >
-                <Text style={{ margin: 15, textAlign: "center" }}>
-                  <Text style={{ fontSize: 15 }}>
-                    AireLocal es una aplicación creada por Daniel Maestre Yepes
-                    siendo esta su proyecto de TFG del año 2021/2022.{"\n"}
-                    <Text style={{ fontWeight: "bold" }}>
-                      Los objetivos de la aplicación son:
-                    </Text>
-                    {"\n"}
-                    {"\n"}
-                  </Text>
-                  {"\u2022"} Proporcionar a los usuarios información sobre los
-                  niveles de contaminación del aire, permitiéndoles{" "}
-                  <Text style={{ fontWeight: "bold" }}>
-                    guardar sitios como favoritos
-                  </Text>{" "}
-                  para no tener que buscarlos siempre.
-                  {"\n"}
-                  {"\n"}
-                  {"\u2022"} Crear{" "}
-                  <Text style={{ fontWeight: "bold" }}>rutas óptimas</Text> con
-                  concentraciones bajas de contaminación{"\n"}
-                  {"\n"}
-                  {"\u2022"} Proporcionar un{" "}
-                  <Text style={{ fontWeight: "bold" }}>diario de síntomas</Text>{" "}
-                  para que el paciente rellene los datos y se le proporcione
-                  consejos y/o alertas respecto a su información.
+            <HeaderTabs titulo="Configuración" navigation={navigation} />
+            <Divider
+              width={1}
+              style={{ marginHorizontal: 15, borderRadius: 100 }}
+              color="#000080"
+            />
+            <ScrollView style={{ height: "100%" }}>
+              <View>
+                <Text style={{ textAlign: "center", marginVertical: 8 }}>
+                  Cuenta con la que estás conectado/a: {auth.currentUser?.email}
                 </Text>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => setModalInfoVisible(false)}
-                >
-                  <Text
-                    style={{ color: "white", fontSize: 15, fontWeight: "bold" }}
-                  >
-                    Ok
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-        )}
-        <LinearGradient
-          colors={["#FFFFFF", "#D9E9EC"]}
-          styles={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <HeaderTabs titulo="Configuración" navigation={navigation} />
-          <Divider
-            width={1}
-            style={{ marginHorizontal: 15, borderRadius: 100 }}
-            color="#000080"
-          />
-          <ScrollView style={{ height: "100%" }}>
-            <View>
-              <Text style={{ textAlign: "center", marginVertical: 8 }}>
-                Cuenta con la que estás conectado/a: {auth.currentUser?.email}
-              </Text>
-              <ConfigField
-                text="Acerca de AireLocal"
-                icon="users"
-                accionOnPress={() => setModalInfoVisible(true)}
-              />
-              <ConfigField
-                text="Cerrar sesión"
-                icon="sign-out-alt"
-                accionOnPress={handleCerrarSesion}
-              />
-              {doctorUser && (
                 <ConfigField
-                  text="Comprobar síntomas pacientes"
-                  icon="user-md"
-                  accionOnPress={handleComprobarSíntomas}
+                  text="Acerca de AireLocal"
+                  icon="users"
+                  size={28}
+                  heightProp={100}
+                  accionOnPress={() => setModalInfoVisible(true)}
                 />
-              )}
-            </View>
-          </ScrollView>
-        </LinearGradient>
-      </SafeAreaView>
-      <BottomTabs navigation={navigation} />
-    </>
-  );
+                <ConfigField
+                  text="Cerrar sesión"
+                  icon="sign-out-alt"
+                  size={28}
+                  heightProp={100}
+                  accionOnPress={handleCerrarSesion}
+                />
+                <ConfigField
+                  text="Obtener información sobre los contaminantes"
+                  size={26}
+                  icon="sign-out-alt"
+                  heightProp={100}
+                  accionOnPress={handleCerrarSesion}
+                />
+                {doctorUser && (
+                  <ConfigField
+                    text="Comprobar síntomas pacientes"
+                    icon="user-md"
+                    size={28}
+                    heightProp={100}
+                    accionOnPress={handleComprobarSíntomas}
+                  />
+                )}
+              </View>
+            </ScrollView>
+          </LinearGradient>
+        </SafeAreaView>
+        <BottomTabs navigation={navigation} />
+      </>
+    );
 }
 
-const ConfigField = ({ icon, text, onPress, accionOnPress }) => {
+const ConfigField = ({ icon, text, onPress, accionOnPress, size, heightProp }) => {
+  console.log(heightProp)
   return (
     <TouchableOpacity
-      style={styles.AlertContainer}
+      style={[styles.AlertContainer, { height: heightProp }]}
       onPress={() => {
         accionOnPress();
       }}
     >
       <FontAwesome5
         name={icon}
-        size={Math.round(Dimensions.get("window").width) < 375 ? 28 :40}
+        size={Math.round(Dimensions.get("window").width) < 375 ? 28 : 40}
         color="#000080"
         style={{ textAlignVertical: "center", marginHorizontal: 10 }}
       ></FontAwesome5>
       <Text
         style={{
           textAlignVertical: "center",
-          fontSize: 30,
+          fontSize: size,
           fontWeight: "bold",
           marginHorizontal: 6,
         }}

@@ -178,7 +178,7 @@ export default function AirCard({ region, withExtra, removeCard }) {
           ]}
         >
           <TopCard
-            aqi={globalAqi != undefined ? globalAqi : "?"}
+            aqi={globalAqi != undefined ? Math.round(globalAqi) : "?"}
             weatherTemp={weatherTemp}
             weatherIconURL={weatherIconUrl}
           />

@@ -134,62 +134,78 @@ function calculateDistance(origin, destination) {
 
 //Calculo de los waypoints de la ruta con menor contaminacion (Algoritmo de Dijkstra modificado)
 function calculateWaypoints(origin, destination) {
+
   if (origin == null || destination == null) {
     return [];
   }
 
-  let openPoints = [];
-  let closedPoints = [];
-  let accumulatedCost = new Array(GrafoMapaMurcia.puntos.length);
+  let posicionesAbiertas = [];
+  let posicionesCerradas = [];
+  let costeAcumulado = new Array(GrafoMapaMurcia.puntos.length);
   let pointConnections = new Array(GrafoMapaMurcia.puntos.length);
 
-  accumulatedCost.fill(0);
-  openPoints.push(origin.idnodo);
+  costeAcumulado.fill(0);
+  posicionesAbiertas.push(origin.idnodo);
 
-  var iteracion = 0;
-  while (openPoints.length > 0) {
-    var currentpoint = openPoints[0];
+  //mientras que haya 1 posicion abierta para analizar
+  while (posicionesAbiertas.length > 0) {
+    //se analiza la primera de esas posiciones abiertas
+    var currentpoint = posicionesAbiertas[0];
     var index = 0;
-    for (var i = 1; i < openPoints.length; i++) {
+    for (var i = 1; i < posicionesAbiertas.length; i++) {
+      /*
+      Para todas las posiciones abiertas para analizar se guarda en 
+      currentpoint aquella con menor coste
+      */
       if (
         fCost(
-          GrafoMapaMurcia.puntos[openPoints[i]],
-          accumulatedCost[openPoints[i]],
+          GrafoMapaMurcia.puntos[posicionesAbiertas[i]],
+          costeAcumulado[posicionesAbiertas[i]],
           destination
         ) <
         fCost(
           GrafoMapaMurcia.puntos[currentpoint],
-          accumulatedCost[currentpoint],
+          costeAcumulado[currentpoint],
           destination
         )
       ) {
-        currentpoint = openPoints[i];
+        currentpoint = posicionesAbiertas[i];
         index = i;
       }
     }
-    openPoints.splice(index, 1);
-    closedPoints.push(currentpoint);
+    /*Borramos el punto seleccionado con menor coste para 
+      que no se pueda volver a seleccionar y lo metemos en las posiciones ya cerradas
+    */
+    posicionesAbiertas.splice(index, 1);
+    posicionesCerradas.push(currentpoint);
+
+    //Si ya hemos llegado al destino paramos el bucle while
     if (currentpoint == destination.idnodo) {
       break;
     }
 
+    /*
+    En este bloque for lo que se hace es analizar los vecinos del último punto seleccionado
+    si están ya siendo analizados o han sido ya escogidos para la ruta no se analiza.
+    Se analiza cuál sería el coste acumulado de cada vecino haciendo uso de la heurística
+    y se añade cada vecino a las posiciones abiertas para analizar
+    */
+   
     for (var neighbour of GrafoMapaMurcia.puntos[currentpoint].vecinos) {
       if (
-        !closedPoints.includes(neighbour) &&
-        !openPoints.includes(neighbour)
+        !posicionesCerradas.includes(neighbour) &&
+        !posicionesAbiertas.includes(neighbour)
       ) {
-        accumulatedCost[neighbour] =
-          accumulatedCost[currentpoint] +
+        costeAcumulado[neighbour] = costeAcumulado[currentpoint] +
           calculateDistance(
             GrafoMapaMurcia.puntos[currentpoint],
             GrafoMapaMurcia.puntos[neighbour]
           ) *
             GrafoMapaMurcia.puntos[neighbour].factori;
         pointConnections[neighbour] = currentpoint;
-        openPoints.push(neighbour);
+        posicionesAbiertas.push(neighbour);
       }
     }
-    iteracion++;
   }
   return pointConnections;
 }

@@ -21,12 +21,13 @@ import { REACT_APP_MAPVIEW_API } from "@env";
 
 export default function Mapa({ navigation }) {
   const { location } = useSelector((state) => state.GPSReducer);
+  console.log(REACT_APP_MAPVIEW_API +"\n");
   const defaultLocation = {
     latitude: 37.9922399,
     longitude: -1.1306544,
     latitudeDelta: 1,
     longitudeDelta: 1,
-  }
+  };
 
   const [regionAdded, setRegionAdded] = useState(false);
 
@@ -38,7 +39,6 @@ export default function Mapa({ navigation }) {
     latitudeDelta: 0.015,
     longitudeDelta: 0.015,
   });
-
 
   async function getRegionesBBDD() {
     const regionesDB = await db
@@ -105,6 +105,7 @@ export default function Mapa({ navigation }) {
   }
 
   const [modalVisible, setModalVisible] = useState(false);
+  console.log(localRegion);
   return (
     <SafeAreaView
       style={[
@@ -218,8 +219,12 @@ export default function Mapa({ navigation }) {
         >
           <Marker
             coordinate={{
-              latitude: localRegion?.latitude ? localRegion.latitude : defaultLocation.latitude,
-              longitude: localRegion?.longitude ? localRegion.longitude : defaultLocation.longitude,
+              latitude: localRegion?.latitude
+                ? localRegion.latitude
+                : defaultLocation.latitude,
+              longitude: localRegion?.longitude
+                ? localRegion.longitude
+                : defaultLocation.longitude,
             }}
           ></Marker>
         </MapView>
@@ -266,9 +271,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   map: {
     width: Dimensions.get("window").width,

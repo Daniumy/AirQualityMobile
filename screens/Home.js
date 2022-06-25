@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  Image,
   Modal,
   TouchableOpacity,
   StyleSheet,
@@ -11,7 +10,6 @@ import {
 import React, { useEffect, useState } from "react";
 import HeaderTabs from "../components/HeaderTabs";
 import GlobalStyles from "../components/GlobalStyles";
-import SearchBar from "../components/SearchBar";
 import AirCard from "../components/AirCard";
 import AirCardGPS from "../components/AirCardGPS";
 import BottomTabs from "../components/BottomTabs";
@@ -27,7 +25,6 @@ export default function Home({ navigation }) {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [modalError, setModalError] = useState(false);
-
   useEffect(() => {
     if (isFocused) {
       setIsLoading(true);
@@ -58,12 +55,14 @@ export default function Home({ navigation }) {
     actualizarRegionesBBDD();
   }
   if (isLoading) {
+    console.log("olee");
     return null;
-  } else
+  } else {
+    console.log("olee1");
     return (
       <>
         <SafeAreaView
-          style={[GlobalStyles.AndroidSafeArea, { marginBottom: 57,}]}
+          style={[GlobalStyles.AndroidSafeArea, { marginBottom: 57 }]}
         >
           <LinearGradient
             colors={["#FFFFFF", "#D9E9EC"]}
@@ -128,7 +127,9 @@ export default function Home({ navigation }) {
                   </View>
                 </View>
               </Modal>
-              <AirCardGPS setModalError={setModalError} />
+              <AirCardGPS
+                setModalError={setModalError}
+              />
               {regions &&
                 regions
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
@@ -159,6 +160,7 @@ export default function Home({ navigation }) {
         <BottomTabs navigation={navigation} />
       </>
     );
+  }
 }
 
 const styles = StyleSheet.create({
