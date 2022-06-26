@@ -175,7 +175,7 @@ export default function Configuracion({ navigation }) {
                 <ConfigField
                   text="Obtener información           sobre los contaminantes"
                   size={24}
-                  icon="sign-out-alt"
+                  icon="info-circle"
                   heightProp={100}
                   accionOnPress={handleObtenerInformacion}
                 />

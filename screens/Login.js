@@ -47,7 +47,16 @@ export default function Login({ navigation }) {
         const user = userCredentials.user;
         setLoginButtonPressed(!loginButtonPressed);
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => {
+        const mensaje = error.message;
+        if (mensaje.includes("badly formatted"))
+          alert("El email está escrito incorrectamente");
+        else if (mensaje.includes("There is no user record"))
+          alert("No hay ningún usuario registrado con este correo");
+        else if (mensaje.includes("password is invalid"))
+          alert("La contraseña no es correcta");
+        else alert(mensaje);
+      });
   };
 
   return (

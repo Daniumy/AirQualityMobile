@@ -21,24 +21,28 @@ export default function Registro({ navigation }) {
   const [rol, setRol] = useState("Paciente");
   const dispatch = useDispatch();
   const deviceWidth = Math.round(Dimensions.get("window").width);
-  
+
   const handleRegistro = () => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        db.collection("usuarios")
-          .doc(user.uid)
-          .set({
-            correo: user.email,
-            rol: rol,
-          })
-          .then(() => {
-            console.log("User added!");
-          });
-        navigation.navigate("Home");
-      })
-      .catch((error) => alert(error.message));
+    if (password == password2) {
+      auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredentials) => {
+          const user = userCredentials.user;
+          db.collection("usuarios")
+            .doc(user.uid)
+            .set({
+              correo: user.email,
+              rol: rol,
+            })
+            .then(() => {
+              console.log("User added!");
+            });
+          navigation.navigate("Home");
+        })
+        .catch((error) => alert(error.message));
+    } else {
+      alert("Las contraseñas no coinciden");
+    }
   };
 
   return (
@@ -56,7 +60,7 @@ export default function Registro({ navigation }) {
         <Text
           style={{
             textAlign: "center",
-            fontSize: deviceWidth < 375 ? 30 :40,
+            fontSize: deviceWidth < 375 ? 30 : 40,
             fontWeight: "bold",
             color: "#000080",
             marginBottom: 10,
@@ -68,7 +72,7 @@ export default function Registro({ navigation }) {
           placeholder="Email"
           style={styles.input}
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text.trim())}
         />
         <TextInput
           placeholder="Contraseña"
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,
-    paddingVertical: Math.round(Dimensions.get("window").width) < 375 ? 7 :10,
+    paddingVertical: Math.round(Dimensions.get("window").width) < 375 ? 7 : 10,
     borderRadius: 10,
     marginVertical: 10,
     borderColor: "#000080",

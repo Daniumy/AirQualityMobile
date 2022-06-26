@@ -2,7 +2,7 @@
   "expo": {
     "name": "AireLocal",
     "slug": "AireLocal",
-    "version": "0.0.3",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon2.png",
     "userInterfaceStyle": "automatic",
