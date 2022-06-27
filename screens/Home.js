@@ -25,6 +25,7 @@ export default function Home({ navigation }) {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [modalError, setModalError] = useState(false);
+  
   useEffect(() => {
     if (isFocused) {
       setIsLoading(true);
@@ -55,10 +56,8 @@ export default function Home({ navigation }) {
     actualizarRegionesBBDD();
   }
   if (isLoading) {
-    console.log("olee");
     return null;
   } else {
-    console.log("olee1");
     return (
       <>
         <SafeAreaView

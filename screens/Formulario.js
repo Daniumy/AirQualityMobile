@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import GlobalStyles from "../components/GlobalStyles";
-import { SafeAreaView, StyleSheet, ScrollView, Dimensions} from "react-native";
+import { SafeAreaView, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Divider } from "react-native-elements";
@@ -11,12 +11,14 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { auth, db } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setSymptomsAdded, setSymptomsSent } from "../redux/actions";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Formulario({ navigation }) {
   const date = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
   const fecha = date + "/" + month + "/" + year;
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const { symptomsAdded, symptomsSent } = useSelector(
     (state) => state.symptomsReducer
@@ -57,12 +59,14 @@ export default function Formulario({ navigation }) {
   const [freqCardiaca, setFreqCardiaca] = useState(null);
   const [caminata, setCaminata] = useState(caminataInitial);
   const [salidoCasa, setSalidoCasa] = useState(salidoCasaInitial);
+  const [haySintomasEnviados, setHaySintomasEnviados] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [activo, setActivo] = useState(false);
 
   const [intentoDeEnvioDeSíntomas, setIntentoDeEnvioDeSíntomas] =
     useState(false);
   const regExp = /[a-z]/i;
-
+  
   function handleEnviarSintomas() {
     setIntentoDeEnvioDeSíntomas(true);
     if (!checkIfCamposIncorrectos()) {
@@ -70,33 +74,39 @@ export default function Formulario({ navigation }) {
       handleSymptomsSent(true);
     }
   }
-
   async function recuperarSintomasYaEnviados() {
+    let sintomas;
     const sintomasDB = await db
       .collection("síntomas")
       .doc(auth.currentUser.email)
-      .get();
-    const sintomas = sintomasDB.data();
+      .get()
+      .then((data) => {
+        sintomas = data.data();
+        setIsLoading(false);
+      });
 
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1;
-    var year = new Date().getFullYear();
-    var fecha = date + "/" + month + "/" + year;
-    let sintomasExisten = sintomas ? sintomas[fecha]?.síntomas : false;
-    if (sintomasExisten) {
-      setEspirometria(sintomasExisten.espirometria);
-      setDisneaNoche(sintomasExisten.disneaNoche);
-      setDisneaDia(sintomasExisten.disneaDia);
-      setSaturacion(sintomasExisten.saturacion);
-      setFreqCardiaca(sintomasExisten.freqCardiaca);
-      setDormido(sintomasExisten.dormido);
-      setCaminata(sintomasExisten.caminata);
-      setSalidoCasa(sintomasExisten.salidoCasa);
-      setTos(sintomasExisten.tos);
-      setEmpeoramiento(sintomasExisten.empeoramiento);
-    }
+      var date = new Date().getDate();
+      var month = new Date().getMonth() + 1;
+      var year = new Date().getFullYear();
+      var fecha = date + "/" + month + "/" + year;
+      let sintomasExisten = sintomas[fecha] ? sintomas[fecha]?.síntomas : false;
+      if (sintomasExisten) {
+        setEspirometria(sintomasExisten.espirometria);
+        setDisneaNoche(sintomasExisten.disneaNoche);
+        setDisneaDia(sintomasExisten.disneaDia);
+        setSaturacion(sintomasExisten.saturacion);
+        setFreqCardiaca(sintomasExisten.freqCardiaca);
+        setDormido(sintomasExisten.dormido);
+        setCaminata(sintomasExisten.caminata);
+        setSalidoCasa(sintomasExisten.salidoCasa);
+        setTos(sintomasExisten.tos);
+        setEmpeoramiento(sintomasExisten.empeoramiento);
+        setHaySintomasEnviados(true);
+      } else {
+        setHaySintomasEnviados(false);
+      }
+   
   }
-
   async function addSymptomsToBBDD() {
     dispatch(
       setSymptomsAdded({
@@ -129,12 +139,13 @@ export default function Formulario({ navigation }) {
   }
   function checkIfCamposIncorrectos() {
     if (
-      (!espirometria.comentario ||
+      !espirometria.comentario ||
       !espirometria.fvc ||
-      !espirometria.fev && espirometria.selectedEspirometria == "Si")||
+      (!espirometria.fev && espirometria.selectedEspirometria == "Si") ||
       regExp.test(espirometria.fev) ||
       regExp.test(espirometria.fvc) ||
-      (!espirometria.noRealizadaMotivo && espirometria.selectedEspirometria == "No")
+      (!espirometria.noRealizadaMotivo &&
+        espirometria.selectedEspirometria == "No")
     ) {
       return true;
     } else if (
@@ -153,380 +164,415 @@ export default function Formulario({ navigation }) {
   }
 
   useEffect(() => {
-    var date = new Date().getDate();
-    if (date != currentDate.split("/")[0]) {
-      var month = new Date().getMonth() + 1;
-      var year = new Date().getFullYear();
-      var fecha = date + "/" + month + "/" + year;
-      setCurrentDate(fecha);
-      handleSymptomsSent(false);
+    // setIsLoading(true);
+    if (isFocused) {
+      var date = new Date().getDate();
+      if (date != currentDate.split("/")[0]) {
+        var month = new Date().getMonth() + 1;
+        var year = new Date().getFullYear();
+        var fecha = date + "/" + month + "/" + year;
+        setCurrentDate(fecha);
+        handleSymptomsSent(false);
+      }
+      recuperarSintomasYaEnviados();
+      if (haySintomasEnviados) {
+        handleSymptomsSent(true);
+      } else {
+        handleSymptomsSent(false);
+      }
     }
-  }, []);
+  }, [isFocused]);
 
-  if (!symptomsSent) {
-    return (
-      <>
-        <SafeAreaView
-          style={[
-            GlobalStyles.AndroidSafeArea,
-            GlobalStyles.SafeAreaBackground,
-            { marginBottom: 57 },
-          ]}
-        >
-          <LinearGradient
-            colors={["#FFFFFF", "#E9F1F2"]}
-            styles={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+  useEffect(() => {
+    handleSymptomsSent(haySintomasEnviados);
+  }, [haySintomasEnviados]);
+
+  if (isLoading) {
+    console.log("uwu1")
+    return null;
+  } else {
+    console.log("uwu2")
+    if (!symptomsSent) {
+      return (
+        <>
+          <SafeAreaView
+            style={[
+              GlobalStyles.AndroidSafeArea,
+              GlobalStyles.SafeAreaBackground,
+              { marginBottom: 57 },
+            ]}
           >
-            <HeaderTabs titulo="Diario de síntomas" navigation={navigation} />
-            <Divider
-              width={1}
-              style={{ marginHorizontal: 15, borderRadius: 100 }}
-              color="#000080"
-            />
-            <ScrollView contentContainerStyle={styles.container}>
-              <View
-                style={{ marginHorizontal: 15, backgroundColor: "transparent" }}
-              >
-                <Disnea
-                  momento="mañana"
-                  disnea={disneaDia}
-                  setDisnea={setDisneaDia}
-                />
-                <Divider width={2} marginTop={20} color="#000080" />
-                <View style={styles.dropdownContainer}>
-                  <Text style={{}}>¿Ha realizado la espirometría?: </Text>
-                  <Picker
-                    dropdownIconColor="white"
-                    selectedValue={espirometria.selectedEspirometria}
+            <LinearGradient
+              colors={["#FFFFFF", "#E9F1F2"]}
+              styles={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <HeaderTabs titulo="Diario de síntomas" navigation={navigation} />
+              <Divider
+                width={1}
+                style={{ marginHorizontal: 15, borderRadius: 100 }}
+                color="#000080"
+              />
+              <ScrollView contentContainerStyle={styles.container}>
+                <View
+                  style={{
+                    marginHorizontal: 15,
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <Disnea
+                    momento="mañana"
+                    disnea={disneaDia}
+                    setDisnea={setDisneaDia}
+                  />
+                  <Divider width={2} marginTop={20} color="#000080" />
+                  <View style={styles.dropdownContainer}>
+                    <Text style={{}}>¿Ha realizado la espirometría?: </Text>
+                    <Picker
+                      dropdownIconColor="white"
+                      selectedValue={espirometria.selectedEspirometria}
+                      style={{
+                        height: 20,
+                        width: 85,
+                        backgroundColor: "#000080",
+                        color: "white",
+                      }}
+                      onValueChange={(itemValue, itemIndex) =>
+                        setEspirometria({
+                          ...espirometria,
+                          selectedEspirometria: itemValue,
+                        })
+                      }
+                    >
+                      <Picker.Item label="Si" value="Si" />
+                      <Picker.Item label="No" value="No" />
+                    </Picker>
+                  </View>
+                  <TextInput
+                    placeholder="Comentarios"
                     style={{
-                      height: 20,
-                      width: 85,
-                      backgroundColor: "#000080",
-                      color: "white",
+                      borderWidth: 2,
+                      borderColor: "#000080",
+                      margin: 20,
+                      paddingLeft: 10,
                     }}
-                    onValueChange={(itemValue, itemIndex) =>
+                    onChangeText={(text) => {
                       setEspirometria({
                         ...espirometria,
-                        selectedEspirometria: itemValue,
-                      })
-                    }
-                  >
-                    <Picker.Item label="Si" value="Si" />
-                    <Picker.Item label="No" value="No" />
-                  </Picker>
-                </View>
-                <TextInput
-                  placeholder="Comentarios"
-                  style={{
-                    borderWidth: 2,
-                    borderColor: "#000080",
-                    margin: 20,
-                    paddingLeft: 10,
-                  }}
-                  onChangeText={(text) => {
-                    setEspirometria({
-                      ...espirometria,
-                      comentario: text,
-                    });
-                  }}
-                  multiline={true}
-                  value={espirometria.comentario}
-                />
-                {espirometria.comentario == null && intentoDeEnvioDeSíntomas && espirometria.selectedEspirometria == "Si" &&(
-                  <Text
-                    style={{
-                      color: "red",
-                      textAlign: "center",
-                      marginTop: -20,
-                      fontSize: 16,
+                        comentario: text,
+                      });
                     }}
-                  >
-                    {" "}
-                    El comentario no debe de estar vacío{" "}
-                  </Text>
-                )}
-                <View style={[styles.dropdownContainer, { marginTop: -20 }]}>
-                  <View style={styles.dropdownContainer}>
-                    <Text>FVC(%):</Text>
-                    <TextInput
-                      onChangeText={(text) => {
-                        setEspirometria({
-                          ...espirometria,
-                          fvc: text,
-                        });
-                      }}
-                      style={{
-                        borderWidth: 2,
-                        borderColor: "#000080",
-                        margin: 20,
-                        paddingLeft: 10,
-                        paddingRight: 20,
-                      }}
-                      value={espirometria.fvc}
-                    />
+                    multiline={true}
+                    value={espirometria.comentario}
+                  />
+                  {espirometria.comentario == null &&
+                    intentoDeEnvioDeSíntomas &&
+                    espirometria.selectedEspirometria == "Si" && (
+                      <Text
+                        style={{
+                          color: "red",
+                          textAlign: "center",
+                          marginTop: -20,
+                          fontSize: 16,
+                        }}
+                      >
+                        {" "}
+                        El comentario no debe de estar vacío{" "}
+                      </Text>
+                    )}
+                  <View style={[styles.dropdownContainer, { marginTop: -20 }]}>
+                    <View style={styles.dropdownContainer}>
+                      <Text>FVC(%):</Text>
+                      <TextInput
+                        onChangeText={(text) => {
+                          setEspirometria({
+                            ...espirometria,
+                            fvc: text,
+                          });
+                        }}
+                        style={{
+                          borderWidth: 2,
+                          borderColor: "#000080",
+                          margin: 20,
+                          paddingLeft: 10,
+                          paddingRight: 20,
+                        }}
+                        value={espirometria.fvc}
+                      />
+                    </View>
+                    <View style={styles.dropdownContainer}>
+                      <Text>FEV1(%):</Text>
+                      <TextInput
+                        onChangeText={(text) => {
+                          setEspirometria({
+                            ...espirometria,
+                            fev: text,
+                          });
+                        }}
+                        style={{
+                          borderWidth: 2,
+                          borderColor: "#000080",
+                          margin: 20,
+                          paddingLeft: 10,
+                          paddingRight: 20,
+                        }}
+                        value={espirometria.fev}
+                      />
+                    </View>
                   </View>
-                  <View style={styles.dropdownContainer}>
-                    <Text>FEV1(%):</Text>
-                    <TextInput
-                      onChangeText={(text) => {
-                        setEspirometria({
-                          ...espirometria,
-                          fev: text,
-                        });
-                      }}
-                      style={{
-                        borderWidth: 2,
-                        borderColor: "#000080",
-                        margin: 20,
-                        paddingLeft: 10,
-                        paddingRight: 20,
-                      }}
-                      value={espirometria.fev}
-                    />
-                  </View>
-                </View>
-                {(espirometria.fev == null || espirometria.fvc == null) &&
-                  intentoDeEnvioDeSíntomas && espirometria.selectedEspirometria == "Si" && (
+                  {(espirometria.fev == null || espirometria.fvc == null) &&
+                    intentoDeEnvioDeSíntomas &&
+                    espirometria.selectedEspirometria == "Si" && (
+                      <Text
+                        style={{
+                          color: "red",
+                          textAlign: "center",
+                          marginTop: -20,
+                          fontSize: 16,
+                        }}
+                      >
+                        Rellena ambos campos
+                      </Text>
+                    )}
+                  {(regExp.test(espirometria.fev) ||
+                    regExp.test(espirometria.fvc)) &&
+                    intentoDeEnvioDeSíntomas && (
+                      <Text
+                        style={{
+                          color: "red",
+                          textAlign: "center",
+                          fontSize: 16,
+                        }}
+                      >
+                        No se aceptan letras en estos campos
+                      </Text>
+                    )}
+                  <TextInput
+                    placeholder="En caso de no realizarla indicar el motivo"
+                    onChangeText={(text) => {
+                      setEspirometria({
+                        ...espirometria,
+                        noRealizadaMotivo: text,
+                      });
+                    }}
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "#000080",
+                      margin: 20,
+                      paddingLeft: 10,
+                    }}
+                    multiline={true}
+                    value={espirometria.noRealizadaMotivo}
+                  />
+                  {espirometria.noRealizadaMotivo == null &&
+                    intentoDeEnvioDeSíntomas &&
+                    espirometria.selectedEspirometria == "No" && (
+                      <Text
+                        style={{
+                          color: "red",
+                          textAlign: "center",
+                          marginTop: -20,
+                          fontSize: 16,
+                        }}
+                      >
+                        {" "}
+                        El campo no debe de estar vacío{" "}
+                      </Text>
+                    )}
+                  <Dormido dormido={dormido} setDormido={setDormido} />
+                  <Divider width={2} marginTop={20} color="#000080" />
+                  <Saturacion
+                    saturacion={saturacion}
+                    setSaturacion={setSaturacion}
+                  />
+                  {!saturacion && intentoDeEnvioDeSíntomas && (
                     <Text
                       style={{
                         color: "red",
-                        textAlign: "center",
+                        textAlign: "right",
                         marginTop: -20,
                         fontSize: 16,
+                        marginBottom: 15,
                       }}
-                    >
-                      Rellena ambos campos
-                    </Text>
-                  )}
-                {(regExp.test(espirometria.fev) ||
-                  regExp.test(espirometria.fvc)) &&
-                  intentoDeEnvioDeSíntomas &&(
-                    <Text
-                      style={{
-                        color: "red",
-                        textAlign: "center",
-                        fontSize: 16,
-                      }}
-                    >
-                      No se aceptan letras en estos campos
-                    </Text>
-                  )}
-                <TextInput
-                  placeholder="En caso de no realizarla indicar el motivo"
-                  onChangeText={(text) => {
-                    setEspirometria({
-                      ...espirometria,
-                      noRealizadaMotivo: text,
-                    });
-                  }}
-                  style={{
-                    borderWidth: 2,
-                    borderColor: "#000080",
-                    margin: 20,
-                    paddingLeft: 10,
-                  }}
-                  multiline={true}
-                  value={espirometria.noRealizadaMotivo}
-                />
-                {espirometria.noRealizadaMotivo == null &&
-                  intentoDeEnvioDeSíntomas && espirometria.selectedEspirometria == "No" && (
-                    <Text
-                      style={{
-                        color: "red",
-                        textAlign: "center",
-                        marginTop: -20,
-                        fontSize: 16,
-                      }}
-                    >
-                      {" "}
-                      El campo no debe de estar vacío{" "}
-                    </Text>
-                  )}
-                <Dormido dormido={dormido} setDormido={setDormido} />
-                <Divider width={2} marginTop={20} color="#000080" />
-                <Saturacion
-                  saturacion={saturacion}
-                  setSaturacion={setSaturacion}
-                />
-                {!saturacion && intentoDeEnvioDeSíntomas && (
-                  <Text
-                    style={{
-                      color: "red",
-                      textAlign: "right",
-                      marginTop: -20,
-                      fontSize: 16,
-                      marginBottom: 15,
-                    }}
-                  >
-                    Rellena el campo
-                  </Text>
-                )}
-                {regExp.test(saturacion) && intentoDeEnvioDeSíntomas && (
-                  <Text
-                    style={{
-                      color: "red",
-                      textAlign: "right",
-                      marginTop: -20,
-                      fontSize: 16,
-                      marginBottom: 5,
-                    }}
-                  >
-                    El campo no puede contener letras
-                  </Text>
-                )}
-                <Divider width={2} marginTop={5} color="#000080" />
-                <FreqCardiaca
-                  freqCardiaca={freqCardiaca}
-                  setFreqCardiaca={setFreqCardiaca}
-                />
-                {freqCardiaca == null && intentoDeEnvioDeSíntomas && (
-                  <Text
-                    style={{
-                      color: "red",
-                      textAlign: "right",
-                      marginTop: -20,
-                      fontSize: 16,
-                      marginBottom: 15,
-                    }}
-                  >
-                    Rellena el campo
-                  </Text>
-                )}
-                {regExp.test(freqCardiaca) && intentoDeEnvioDeSíntomas && (
-                  <Text
-                    style={{
-                      color: "red",
-                      textAlign: "right",
-                      marginTop: -20,
-                      fontSize: 16,
-                      marginBottom: 5,
-                    }}
-                  >
-                    El campo no puede contener letras
-                  </Text>
-                )}
-                <Divider width={2} marginTop={5} color="#000080" />
-                <Caminata
-                  caminata={caminata}
-                  setCaminata={setCaminata}
-                  intentoDeEnvioDeSíntomas={intentoDeEnvioDeSíntomas}
-                  regExp={regExp}
-                />
-                <Divider width={2} marginTop={5} color="#000080" />
-                <Disnea
-                  momento="noche"
-                  disnea={disneaNoche}
-                  setDisnea={setDisneaNoche}
-                />
-                <Divider width={2} marginTop={20} color="#000080" />
-                <SalidoCasa salido={salidoCasa} setSalido={setSalidoCasa} />
-                {!salidoCasa.comentario &&
-                  salidoCasa.value == "Si" &&
-                  intentoDeEnvioDeSíntomas && (
-                    <Text
-                      style={{ color: "red", textAlign: "right", fontSize: 16 }}
                     >
                       Rellena el campo
                     </Text>
                   )}
-                <Divider width={2} marginTop={20} color="#000080" />
-                <Empeoramiento
-                  empeoramiento={empeoramiento}
-                  setEmpeoramiento={setEmpeoramiento}
-                />
-                <Divider width={2} marginTop={20} color="#000080" />
-                <Tos tos={tos} setTos={setTos} />
-              </View>
+                  {regExp.test(saturacion) && intentoDeEnvioDeSíntomas && (
+                    <Text
+                      style={{
+                        color: "red",
+                        textAlign: "right",
+                        marginTop: -20,
+                        fontSize: 16,
+                        marginBottom: 5,
+                      }}
+                    >
+                      El campo no puede contener letras
+                    </Text>
+                  )}
+                  <Divider width={2} marginTop={5} color="#000080" />
+                  <FreqCardiaca
+                    freqCardiaca={freqCardiaca}
+                    setFreqCardiaca={setFreqCardiaca}
+                  />
+                  {freqCardiaca == null && intentoDeEnvioDeSíntomas && (
+                    <Text
+                      style={{
+                        color: "red",
+                        textAlign: "right",
+                        marginTop: -20,
+                        fontSize: 16,
+                        marginBottom: 15,
+                      }}
+                    >
+                      Rellena el campo
+                    </Text>
+                  )}
+                  {regExp.test(freqCardiaca) && intentoDeEnvioDeSíntomas && (
+                    <Text
+                      style={{
+                        color: "red",
+                        textAlign: "right",
+                        marginTop: -20,
+                        fontSize: 16,
+                        marginBottom: 5,
+                      }}
+                    >
+                      El campo no puede contener letras
+                    </Text>
+                  )}
+                  <Divider width={2} marginTop={5} color="#000080" />
+                  <Caminata
+                    caminata={caminata}
+                    setCaminata={setCaminata}
+                    intentoDeEnvioDeSíntomas={intentoDeEnvioDeSíntomas}
+                    regExp={regExp}
+                  />
+                  <Divider width={2} marginTop={5} color="#000080" />
+                  <Disnea
+                    momento="noche"
+                    disnea={disneaNoche}
+                    setDisnea={setDisneaNoche}
+                  />
+                  <Divider width={2} marginTop={20} color="#000080" />
+                  <SalidoCasa salido={salidoCasa} setSalido={setSalidoCasa} />
+                  {!salidoCasa.comentario &&
+                    salidoCasa.value == "Si" &&
+                    intentoDeEnvioDeSíntomas && (
+                      <Text
+                        style={{
+                          color: "red",
+                          textAlign: "right",
+                          fontSize: 16,
+                        }}
+                      >
+                        Rellena el campo
+                      </Text>
+                    )}
+                  <Divider width={2} marginTop={20} color="#000080" />
+                  <Empeoramiento
+                    empeoramiento={empeoramiento}
+                    setEmpeoramiento={setEmpeoramiento}
+                  />
+                  <Divider width={2} marginTop={20} color="#000080" />
+                  <Tos tos={tos} setTos={setTos} />
+                </View>
 
+                <TouchableOpacity
+                  style={{
+                    marginVertical: 25,
+                    padding: 15,
+                    backgroundColor: "#000080",
+                    alignItems: "center",
+                    alignSelf: "center",
+                    width: "50%",
+                    borderRadius: 10,
+                  }}
+                  onPress={() => handleEnviarSintomas()}
+                >
+                  <Text
+                    style={{ fontSize: 17, color: "white", fontWeight: "bold" }}
+                  >
+                    Enviar síntomas
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </LinearGradient>
+          </SafeAreaView>
+          <BottomTabs navigation={navigation} />
+        </>
+      );
+    } else {
+      return (
+        <SafeAreaView
+          style={[
+            GlobalStyles.AndroidSafeArea,
+            GlobalStyles.SafeAreaBackground,
+            { backgroundColor: "white" },
+          ]}
+        >
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#000080",
+              width: "15%",
+              borderRadius: 10,
+              alignItems: "center",
+              marginTop: 10,
+              marginLeft: 10,
+              paddingVertical: 3,
+            }}
+            onPress={() => navigation.navigate("Home")}
+          >
+            <AntDesign name="back" size={40} color="white"></AntDesign>
+          </TouchableOpacity>
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              top: "35%",
+            }}
+          >
+            <Text
+              style={{
+                fontSize:
+                  Math.round(Dimensions.get("window").width) < 375 ? 21 : 22,
+              }}
+            >
+              ¡Ya has enviado los síntomas de hoy!
+            </Text>
+            <Text style={{ fontSize: 22 }}>{currentDate}</Text>
+            <Text style={{ fontSize: 22 }}>¿Deseas hacerlo de nuevo?</Text>
+            <View>
               <TouchableOpacity
                 style={{
-                  marginVertical: 25,
-                  padding: 15,
+                  marginVertical: 15,
+                  paddingHorizontal: 35,
+                  paddingVertical: 18,
                   backgroundColor: "#000080",
                   alignItems: "center",
-                  alignSelf: "center",
-                  width: "50%",
                   borderRadius: 10,
                 }}
-                onPress={() => handleEnviarSintomas()}
+                onPress={() => {
+                  handleSymptomsSent(false);
+                  recuperarSintomasYaEnviados();
+                }}
               >
                 <Text
                   style={{ fontSize: 17, color: "white", fontWeight: "bold" }}
                 >
-                  Enviar síntomas
+                  Hacerlo de nuevo
                 </Text>
               </TouchableOpacity>
-            </ScrollView>
-          </LinearGradient>
-        </SafeAreaView>
-        <BottomTabs navigation={navigation} />
-      </>
-    );
-  } else {
-    return (
-      <SafeAreaView
-        style={[
-          GlobalStyles.AndroidSafeArea,
-          GlobalStyles.SafeAreaBackground,
-          { backgroundColor: "white" },
-        ]}
-      >
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#000080",
-            width: "15%",
-            borderRadius: 10,
-            alignItems: "center",
-            marginTop: 10,
-            marginLeft: 10,
-            paddingVertical: 3,
-          }}
-          onPress={() => navigation.navigate("Home")}
-        >
-          <AntDesign name="back" size={40} color="white"></AntDesign>
-        </TouchableOpacity>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            top: "35%",
-          }}
-        >
-          <Text style={{ fontSize: Math.round(Dimensions.get("window").width) < 375 ? 21 : 22 }}>
-            ¡Ya has enviado los síntomas de hoy!
-          </Text>
-          <Text style={{ fontSize: 22 }}>{currentDate}</Text>
-          <Text style={{ fontSize: 22 }}>¿Deseas hacerlo de nuevo?</Text>
-          <View>
-            <TouchableOpacity
-              style={{
-                marginVertical: 15,
-                paddingHorizontal: 35,
-                paddingVertical: 18,
-                backgroundColor: "#000080",
-                alignItems: "center",
-                borderRadius: 10,
-              }}
-              onPress={() => {
-                handleSymptomsSent(false);
-                recuperarSintomasYaEnviados();
-              }}
-            >
-              <Text
-                style={{ fontSize: 17, color: "white", fontWeight: "bold" }}
-              >
-                Hacerlo de nuevo
-              </Text>
-            </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </SafeAreaView>
-    );
+        </SafeAreaView>
+      );
+    }
   }
 }
 const Tos = ({ tos, setTos }) => (

@@ -173,6 +173,7 @@ function calculateWaypoints(origin, destination) {
         index = i;
       }
     }
+    
     /*Borramos el punto seleccionado con menor coste para 
       que no se pueda volver a seleccionar y lo metemos en las posiciones ya cerradas
     */
