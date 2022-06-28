@@ -105,14 +105,15 @@ export default function MapaRuta({ navigation }) {
     localRegion.longitude
   );
 
-  console.log(isGPSLocationInsideArea1);
-
   return (
     <SafeAreaView
       style={[GlobalStyles.AndroidSafeArea, GlobalStyles.SafeAreaBackground]}
     >
       <GooglePlacesAutocomplete
         placeholder="Busca un destino"
+        textInputProps={{
+          placeholderTextColor: "darkgrey",
+       }}
         fetchDetails={true}
         GooglePlacesSearchQuery={{
           rankby: "distance",

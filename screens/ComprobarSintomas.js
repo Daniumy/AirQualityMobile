@@ -9,6 +9,7 @@ import {
   FlatList,
   Pressable,
   Keyboard,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -30,10 +31,35 @@ export default function ComprobarSintomas({ navigation }) {
   const [inputValue, setInputValue] = useState("");
   const [sintomasOfUser, setSintomasOfUser] = useState(null);
   const [noSintomasParaFecha, setNoSintomasParaFecha] = useState(false);
+  const [acceptDateButton, setAcceptDateButton] = useState(false);
 
   function onDateChange(event, selectedDate) {
+    if (!selectedDate) return;
     const currentDate = selectedDate || date;
+    setDate(currentDate);
+
+    let tempDate = new Date(currentDate);
+    let fDate =
+      tempDate.getDate() +
+      "/" +
+      (tempDate.getMonth() + 1) +
+      "/" +
+      tempDate.getFullYear();
+    setAcceptDateButton(true);
+    setSelectedDate(fDate);
+  }
+
+  function acceptDate() {
+    setAcceptDateButton(false);
     setDatePickerOpen(false);
+    getSintomasOfUser(selectedDate);
+
+  }
+
+  function onDateChangeAndroid(event, selectedDate) {
+    setDatePickerOpen(false);
+    if (!selectedDate) return;
+    const currentDate = selectedDate || date;
     setDate(currentDate);
 
     let tempDate = new Date(currentDate);
@@ -118,18 +144,10 @@ export default function ComprobarSintomas({ navigation }) {
               />
               <ScrollView>
                 <View>
-                  {datePickerOpen && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode={"date"}
-                      is24Hour={true}
-                      onChange={onDateChange}
-                    />
-                  )}
                   <View style={styles.searchContainer}>
                     <TextInput
                       placeholder="Buscar paciente"
+                      placeholderTextColor="darkgrey"
                       style={styles.searchInput}
                       onChangeText={(text) => searchText(text)}
                       value={inputValue}
@@ -155,6 +173,45 @@ export default function ComprobarSintomas({ navigation }) {
                       )}
                     />
                   </View>
+                  {datePickerOpen && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={date}
+                      mode={"date"}
+                      is24Hour={true}
+                      display={Platform.OS === "ios" ? "spinner" : "default"}
+                      onChange={
+                        Platform.OS === "ios"
+                          ? onDateChange
+                          : onDateChangeAndroid
+                      }
+                      textColor="black"
+                    />
+                  )}
+                  {acceptDateButton && (
+                    <TouchableOpacity
+                      style={{
+                        marginVertical: 25,
+                        padding: 15,
+                        backgroundColor: "#000080",
+                        alignItems: "center",
+                        alignSelf: "center",
+                        width: 100,
+                        borderRadius: 10,
+                      }}
+                      onPress={() => acceptDate()}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 17,
+                          color: "white",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Aceptar fecha
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                   {noSintomasParaFecha && (
                     <Text
                       style={{

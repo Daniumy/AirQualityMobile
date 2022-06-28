@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import GlobalStyles from "../components/GlobalStyles";
-import { SafeAreaView, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { SafeAreaView, StyleSheet, ScrollView, Dimensions, Platform } from "react-native";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Divider } from "react-native-elements";
@@ -233,11 +233,12 @@ export default function Formulario({ navigation }) {
                       dropdownIconColor="white"
                       selectedValue={espirometria.selectedEspirometria}
                       style={{
-                        height: 20,
-                        width: 85,
-                        backgroundColor: "#000080",
+                        width: 87,
+                        backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
                         color: "white",
+                        borderRadius: 8,
                       }}
+                      itemStyle={{ height: 50}}
                       onValueChange={(itemValue, itemIndex) =>
                         setEspirometria({
                           ...espirometria,
@@ -251,6 +252,7 @@ export default function Formulario({ navigation }) {
                   </View>
                   <TextInput
                     placeholder="Comentarios"
+                    placeholderTextColor="darkgrey"
                     style={{
                       borderWidth: 2,
                       borderColor: "#000080",
@@ -285,6 +287,8 @@ export default function Formulario({ navigation }) {
                     <View style={styles.dropdownContainer}>
                       <Text>FVC(%):</Text>
                       <TextInput
+                        placeholder="50"
+                        placeholderTextColor="darkgrey"
                         onChangeText={(text) => {
                           setEspirometria({
                             ...espirometria,
@@ -304,6 +308,8 @@ export default function Formulario({ navigation }) {
                     <View style={styles.dropdownContainer}>
                       <Text>FEV1(%):</Text>
                       <TextInput
+                      placeholder="50"
+                      placeholderTextColor="darkgrey"
                         onChangeText={(text) => {
                           setEspirometria({
                             ...espirometria,
@@ -350,6 +356,7 @@ export default function Formulario({ navigation }) {
                     )}
                   <TextInput
                     placeholder="En caso de no realizarla indicar el motivo"
+                    placeholderTextColor="darkgrey"
                     onChangeText={(text) => {
                       setEspirometria({
                         ...espirometria,
@@ -581,13 +588,14 @@ const Tos = ({ tos, setTos }) => (
     </Text>
 
     <Picker
+    itemStyle={{ height: 50}}
       dropdownIconColor="white"
       selectedValue={tos}
       style={{
-        height: 20,
         width: 85,
-        backgroundColor: "#000080",
+        backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
         color: "white",
+        borderRadius: 8,
       }}
       onValueChange={(itemValue, itemIndex) => setTos(itemValue)}
     >
@@ -613,13 +621,14 @@ const Empeoramiento = ({ empeoramiento, setEmpeoramiento }) => (
     </Text>
 
     <Picker
+    itemStyle={{ height: 50}}
       dropdownIconColor="white"
       selectedValue={empeoramiento}
       style={{
-        height: 20,
-        width: 85,
-        backgroundColor: "#000080",
+        width: 87,
+        backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
         color: "white",
+        borderRadius: 8,
       }}
       onValueChange={(itemValue, itemIndex) => setEmpeoramiento(itemValue)}
     >
@@ -634,12 +643,13 @@ const SalidoCasa = ({ salido, setSalido }) => (
       <Text style={{}}>¿Ha salido de casa?: </Text>
 
       <Picker
+      itemStyle={{ height: 50}}
         dropdownIconColor="white"
         selectedValue={salido.value}
         style={{
-          height: 20,
-          width: 85,
-          backgroundColor: "#000080",
+          borderRadius: 8,
+          width: 87,
+          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
           color: "white",
         }}
         onValueChange={(itemValue, itemIndex) =>
@@ -660,6 +670,7 @@ const SalidoCasa = ({ salido, setSalido }) => (
       </Text>
       <TextInput
         placeholder={"He recorrido \n1 KM en\n30 minutos"}
+        placeholderTextColor="darkgrey"
         style={{
           borderWidth: 2,
           borderColor: "#000080",
@@ -691,12 +702,14 @@ const Disnea = ({ momento, disnea, setDisnea }) => {
       <Text style={{}}>Grado de disnea por la {momento}: </Text>
 
       <Picker
+      itemStyle={{ height: 50}}
+
         dropdownIconColor="white"
         selectedValue={disnea}
         style={{
-          height: 20,
+          borderRadius: 8,
           width: 85,
-          backgroundColor: "#000080",
+          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
           color: "white",
         }}
         onValueChange={(itemValue, itemIndex) => setDisnea(itemValue)}
@@ -733,6 +746,7 @@ const Caminata = ({
       <View style={styles.flexRowCenter}>
         <TextInput
           placeholder="10"
+          placeholderTextColor="darkgrey"
           style={{
             borderWidth: 2,
             borderColor: "#000080",
@@ -785,6 +799,7 @@ const Caminata = ({
       <View style={styles.flexRowCenter}>
         <TextInput
           placeholder="80"
+          placeholderTextColor="darkgrey"
           style={{
             borderWidth: 2,
             borderColor: "#000080",
@@ -835,12 +850,13 @@ const Caminata = ({
     <View style={[styles.dropdownContainer]}>
       <Text>Disnea (escala de BORG): </Text>
       <Picker
+      itemStyle={{ height: 50}}
         dropdownIconColor="white"
         selectedValue={caminata.disnea}
         style={{
-          height: 5,
+          borderRadius: 8,
           width: 85,
-          backgroundColor: "#000080",
+          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
           color: "white",
         }}
         onValueChange={(itemValue, itemIndex) =>
@@ -871,6 +887,7 @@ const Caminata = ({
 
       <TextInput
         placeholder="Comentario"
+        placeholderTextColor="darkgrey"
         style={{
           borderWidth: 2,
           borderColor: "#000080",
@@ -902,6 +919,7 @@ const FreqCardiaca = ({ freqCardiaca, setFreqCardiaca }) => (
     <View style={styles.flexRowCenter}>
       <TextInput
         placeholder="80"
+        placeholderTextColor="darkgrey"
         style={{
           borderWidth: 2,
           borderColor: "#000080",
@@ -927,6 +945,7 @@ const Saturacion = ({ saturacion, setSaturacion }) => (
     <View style={styles.flexRowCenter}>
       <TextInput
         placeholder="10"
+        placeholderTextColor="darkgrey"
         style={{
           borderWidth: 2,
           borderColor: "#000080",
@@ -953,12 +972,13 @@ const Dormido = ({ dormido, setDormido }) => (
       <Text style={{}}>Que tal has dormido del 1 al 5: </Text>
 
       <Picker
+      itemStyle={{ height: 50}}
         dropdownIconColor="white"
         selectedValue={dormido}
         style={{
-          height: 20,
+          borderRadius: 8,
           width: 85,
-          backgroundColor: "#000080",
+          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
           color: "white",
         }}
         onValueChange={(itemValue, itemIndex) => setDormido(itemValue)}

@@ -6,6 +6,7 @@ import {
   TextInput,
   Image,
   Dimensions,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -13,6 +14,7 @@ import AppIcon from "../assets/icons/what1.png";
 import { auth, db } from "../firebase";
 import { Picker } from "@react-native-picker/picker";
 import { useDispatch } from "react-redux";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function Registro({ navigation }) {
   const [email, setEmail] = useState("");
@@ -70,12 +72,14 @@ export default function Registro({ navigation }) {
         </Text>
         <TextInput
           placeholder="Email"
+          placeholderTextColor="darkgrey"
           style={styles.input}
           value={email}
           onChangeText={(text) => setEmail(text.trim())}
         />
         <TextInput
           placeholder="Contraseña"
+          placeholderTextColor="darkgrey"
           style={styles.input}
           secureTextEntry
           value={password}
@@ -83,6 +87,7 @@ export default function Registro({ navigation }) {
         />
         <TextInput
           placeholder="Repite la contraseña"
+          placeholderTextColor="darkgrey"
           style={styles.input}
           secureTextEntry
           value={password2}
@@ -101,21 +106,39 @@ export default function Registro({ navigation }) {
           <Text style={{ marginBottom: 10 }}>
             ¿Eres un paciente o un doctor?
           </Text>
-          <Picker
-            dropdownIconColor="white"
-            selectedValue={rol}
+          <View
             style={{
-              width: 150,
-              backgroundColor: "lightgrey",
-              color: "#000080",
-            }}
-            onValueChange={(itemValue, itemIndex) => {
-              setRol(itemValue);
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            <Picker.Item label="Doctor" value="Doctor" />
-            <Picker.Item label="Paciente" value="Paciente" />
-          </Picker>
+            <Picker
+              itemStyle={{ height: 60, borderRadius: 8 }}
+              dropdownIconColor="white"
+              selectedValue={rol}
+              style={{
+                width: 150,
+                backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+                color: "white",
+                borderRadius: 8,
+              }}
+              onValueChange={(itemValue, itemIndex) => {
+                setRol(itemValue);
+              }}
+            >
+              <Picker.Item label="Doctor" value="Doctor" />
+              <Picker.Item label="Paciente" value="Paciente" />
+            </Picker>
+            {Platform.OS === "ios" && (
+              <FontAwesome5
+                name="arrows-alt-v"
+                size={30}
+                color="black"
+                style={{ marginLeft: 10 }}
+              ></FontAwesome5>
+            )}
+          </View>
         </View>
       </View>
       <View>
@@ -169,6 +192,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderColor: "#000080",
     borderWidth: 1,
+    color: "green",
   },
   button: {
     backgroundColor: "#000080",

@@ -363,7 +363,7 @@ const Alerta = ({
         name="warning"
         size={40}
         color="white"
-        style={{ textAlignVertical: "center", marginHorizontal: 10 }}
+        style={{ textAlignVertical: "center", marginHorizontal: 10, alignSelf:"center" }}
       ></AntDesign>
       <View>
         <Text

@@ -173,7 +173,7 @@ export default function Configuracion({ navigation }) {
                   accionOnPress={handleCerrarSesion}
                 />
                 <ConfigField
-                  text="Obtener información           sobre los contaminantes"
+                  text="Obtener información sobre los contaminantes"
                   size={24}
                   icon="info-circle"
                   heightProp={100}
@@ -217,7 +217,8 @@ const ConfigField = ({ icon, text, onPress, accionOnPress, size, heightProp }) =
           textAlignVertical: "center",
           fontSize: size,
           fontWeight: "bold",
-          marginHorizontal: 6,
+          marginLeft: 8,
+          marginRight: 60,
         }}
       >
         {text}
@@ -238,6 +239,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderColor: "#000080",
     borderWidth: 2,
+    textAlign:"center",
+    alignItems:"center",
+    textAlignVertical: "center"
   },
   centeredView: {
     flex: 1,

@@ -117,6 +117,9 @@ export default function Mapa({ navigation }) {
       {!modalVisible && (
         <GooglePlacesAutocomplete
           placeholder="Busca un lugar"
+          textInputProps={{
+            placeholderTextColor: "darkgrey",
+         }}
           fetchDetails={true}
           GooglePlacesSearchQuery={{
             rankby: "distance",

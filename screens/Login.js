@@ -84,12 +84,14 @@ export default function Login({ navigation }) {
         </Text>
         <TextInput
           placeholder="Email"
+          placeholderTextColor="darkgrey"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
           placeholder="Contraseña"
+          placeholderTextColor="darkgrey"
           style={styles.input}
           secureTextEntry
           value={password}
