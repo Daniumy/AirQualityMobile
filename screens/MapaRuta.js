@@ -20,7 +20,7 @@ import { Divider } from "react-native-elements";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector, useDispatch } from "react-redux";
-import { setRegion, setDestinyAction } from "../redux/actions";
+import { setRegion } from "../redux/actions";
 import * as Location from "expo-location";
 import {
   renderRouteLimit,
@@ -32,31 +32,20 @@ import { REACT_APP_MAPVIEW_API } from "@env";
 
 export default function MapaRuta({ navigation }) {
   const { location } = useSelector((state) => state.GPSReducer);
-  const { destinyGlobalLocation } = useSelector(
-    (state) => state.DestinyReducer
-  );
+
   const dispatch = useDispatch();
-  console.log(REACT_APP_MAPVIEW_API);
+
   const defaultDestinyLocation = {
     latitude: 37.984047,
     longitude: -1.128575,
   };
+
   const defaultLocation = {
     latitude: 37.9922399,
     longitude: -1.1306544,
     latitudeDelta: 0.04,
     longitudeDelta: 0.04,
   };
-
-  function setLocalDestinoRegion(destino) {
-    dispatch(
-      setDestinyAction({
-        direccion: destino.direccion,
-        latitude: destino.latitude,
-        longitude: destino.longitude,
-      })
-    );
-  }
 
   const [localRegion, setLocalRegion] = useState({
     direccion: location.direccion,
@@ -69,12 +58,26 @@ export default function MapaRuta({ navigation }) {
   const [currentRoute, setCurrentRoute] = useState(null);
   const [initialPoint, setInitialPoint] = useState(null);
   const [finalPoint, setFinalPoint] = useState(null);
-
-  function getOptimalRoute(origin, destination) {
-    const waypoints = calculateRoute(origin, destination);
-    setInitialPoint(origin);
-    setFinalPoint(destination);
-    setCurrentRoute(waypoints);
+  const [destinyGlobalLocation, setDestinyGlobalLocation] = useState({
+    direccion: null,
+    latitude: 37.984047,
+    longitude: -1.128575,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.015,
+  });
+  function getOptimalRoute(origin, destination, isGPSLocationInsideArea1) {
+    if (!isGPSLocationInsideArea1) {
+      const waypoints = calculateRoute(defaultLocation, destination);
+      setInitialPoint(defaultLocation);
+      setFinalPoint(destination);
+      setCurrentRoute(waypoints);
+    }
+    else {
+      const waypoints = calculateRoute(origin, destination);
+      setInitialPoint(origin);
+      setFinalPoint(destination);
+      setCurrentRoute(waypoints);
+    }
   }
 
   function renderOptimalRoute() {
@@ -97,14 +100,13 @@ export default function MapaRuta({ navigation }) {
     );
   }
 
-  if (!destinyGlobalLocation.latitude || !destinyGlobalLocation.longitude) {
-    destinyGlobalLocation.latitude = defaultDestinyLocation.latitude;
-    destinyGlobalLocation.longitude = defaultDestinyLocation.longitude;
-  }
   let isGPSLocationInsideArea1 = isInsideArea1(
     localRegion.latitude,
     localRegion.longitude
   );
+
+  console.log(isGPSLocationInsideArea1);
+
   return (
     <SafeAreaView
       style={[GlobalStyles.AndroidSafeArea, GlobalStyles.SafeAreaBackground]}
@@ -219,8 +221,8 @@ export default function MapaRuta({ navigation }) {
             ) {
               setLocalRegion({
                 ...localRegion,
-                latitude: 37.9854323,
-                longitude: -1.1290433,
+                latitude: 37.9922399,
+                longitude: -1.1306544,
               });
               alert("¡Parece que te has salido del área disponible!");
             } else {
@@ -250,14 +252,14 @@ export default function MapaRuta({ navigation }) {
                 e.nativeEvent.coordinate.longitude
               )
             ) {
-              setLocalDestinoRegion({
+              setDestinyGlobalLocation({
                 ...destinyGlobalLocation,
                 latitude: defaultDestinyLocation.latitude,
                 longitude: defaultDestinyLocation.longitude,
               });
               alert("¡Parece que te has salido del área disponible!");
             } else {
-              setLocalDestinoRegion({
+              setDestinyGlobalLocation({
                 ...destinyGlobalLocation,
                 latitude: e.nativeEvent.coordinate.latitude,
                 longitude: e.nativeEvent.coordinate.longitude,
@@ -265,7 +267,7 @@ export default function MapaRuta({ navigation }) {
               setCurrentRoute(null);
             }
           }}
-          pinColor={"black"}
+          pinColor={"blue"}
           title="Destino"
         ></Marker>
 
@@ -283,7 +285,13 @@ export default function MapaRuta({ navigation }) {
           elevation: 1,
           borderRadius: 10,
         }}
-        onPress={() => getOptimalRoute(localRegion, destinyGlobalLocation)}
+        onPress={() =>
+          getOptimalRoute(
+            localRegion,
+            destinyGlobalLocation,
+            isGPSLocationInsideArea1
+          )
+        }
       >
         <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}>
           Calcular ruta óptima

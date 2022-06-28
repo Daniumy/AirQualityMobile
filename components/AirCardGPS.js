@@ -363,7 +363,7 @@ const TopCard = ({ aqi, weatherTemp, weatherIconURL }) => (
         </Text>
         <Text
           style={{
-            fontSize: 25,
+            fontSize: 22,
             marginLeft: 8,
             marginBottom: 8,
             textAlign: "center",
@@ -371,7 +371,7 @@ const TopCard = ({ aqi, weatherTemp, weatherIconURL }) => (
         >
           {aqi}
           {"\n"}
-          <Text style={{ fontSize: 15 }}>AQI</Text>
+          <Text style={{ fontSize: 14 }}>AQI</Text>
         </Text>
       </View>
     </View>

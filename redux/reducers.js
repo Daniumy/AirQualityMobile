@@ -1,6 +1,5 @@
 import {
   SET_CURRENT_GPS,
-  SET_DESTINY,
   SET_SYMPTOMS_ADDED,
   SET_SYMPTOMS_SENT
 } from "./actions";
@@ -19,15 +18,6 @@ const initialGPSState = {
   },
 };
 
-const initialDestinyState = {
-  destinyGlobalLocation: {
-    direccion: null,
-    latitude: null,
-    longitude: null,
-    latitudeDelta: 0.015,
-    longitudeDelta: 0.015,
-  },
-};
 
 function symptomsReducer(state = initialSymptoms, action) {
   switch (action.type) {
@@ -56,25 +46,9 @@ function GPSReducer(state = initialGPSState, action) {
   }
 }
 
-function DestinyReducer(state = initialDestinyState, action) {
-  switch (action.type) {
-    case SET_DESTINY:
-      return {
-        ...state,
-        destinyGlobalLocation: {
-          ...action.payload,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        },
-      };
-    default:
-      return state;
-  }
-}
 
 
 export {
   symptomsReducer,
   GPSReducer,
-  DestinyReducer,
 };

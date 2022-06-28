@@ -188,10 +188,8 @@ export default function Formulario({ navigation }) {
   }, [haySintomasEnviados]);
 
   if (isLoading) {
-    console.log("uwu1")
     return null;
   } else {
-    console.log("uwu2")
     if (!symptomsSent) {
       return (
         <>

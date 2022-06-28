@@ -124,7 +124,7 @@ export default function Notificaciones({ navigation }) {
       }
     }
   }, [concentraciones]);
-
+  console.log(deviceWidth)
   function TwoUnhealthyConcentrations() {
     let amount = 0;
 
@@ -242,7 +242,7 @@ export default function Notificaciones({ navigation }) {
                     "No salgas sin mascarilla \n\u2022 Cierra ventana \n\u2022 No hagas ejercicio"
                   }
                   background="#DE2F24"
-                  height={120}
+                  height={130}
                 />
               )}
               {ThreeConcentrationsUnhealthy() && (
@@ -253,7 +253,7 @@ export default function Notificaciones({ navigation }) {
                     "No salgas sin mascarilla \n\u2022 Cierra ventana \n\u2022 No hagas ejercicio"
                   }
                   background="#DE2F24"
-                  height={140}
+                  height={145}
                 />
               )}
               {CertainLevelConcentration(AQI_LEVEL.hazardous).length > 0 && (
@@ -300,12 +300,12 @@ export default function Notificaciones({ navigation }) {
                   {isEspirometriaDangerous(espirometria) && (
                     <Alerta
                       fontSize={15}
-                      titleText={"Debido a su espirometria se le recomienda:"}
+                      titleText={"Debido a su espirometria se\n le recomienda:"}
                       suggestionText={"No salir de casa"}
                       background={colorEspirometria(
                         getHigherEspirometria(espirometria)
                       )}
-                      height={80}
+                      height={90}
                     />
                   )}
                   {isSaturacionDangerous(saturacion) && (
@@ -320,19 +320,19 @@ export default function Notificaciones({ navigation }) {
                   {isFreqCardiacaDangerous(freqCardiaca) && (
                     <Alerta
                       fontSize={14}
-                      titleText={deviceWidth < 375 ? "Por su frecuencia cardíaca \nse le recomienda:" : "Por su frecuencia cardíaca se le recomienda:"}
+                      titleText={"Por su frecuencia cardíaca \nse le recomienda:"}
                       suggestionText={"No salir de casa"}
                       background={colorFreqCardiaca(freqCardiaca)}
-                      height={deviceWidth < 375? 90 :80}
+                      height={90}
                     />
                   )}
                   {isNivelSueñoDangerous(dormido) && (
                     <Alerta
                       fontSize={15}
-                      titleText={deviceWidth < 375 ?"Debido a su grado sueño \nse le recomienda:": "Debido a su grado sueño se le recomienda:"}
+                      titleText={"Debido a su grado sueño se le\n recomienda:"}
                       suggestionText={"No salir de casa"}
                       background={colorNivelSueño(dormido)}
-                      height={deviceWidth < 375? 90 :80}
+                      height={90}
                     />
                   )}
                 </View>
