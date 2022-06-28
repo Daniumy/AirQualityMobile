@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import GlobalStyles from "../components/GlobalStyles";
-import { SafeAreaView, StyleSheet, ScrollView, Dimensions, Platform } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  Platform,
+} from "react-native";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Divider } from "react-native-elements";
@@ -12,6 +18,7 @@ import { auth, db } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { setSymptomsAdded, setSymptomsSent } from "../redux/actions";
 import { useIsFocused } from "@react-navigation/native";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function Formulario({ navigation }) {
   const date = new Date().getDate();
@@ -66,7 +73,7 @@ export default function Formulario({ navigation }) {
   const [intentoDeEnvioDeSíntomas, setIntentoDeEnvioDeSíntomas] =
     useState(false);
   const regExp = /[a-z]/i;
-  
+
   function handleEnviarSintomas() {
     setIntentoDeEnvioDeSíntomas(true);
     if (!checkIfCamposIncorrectos()) {
@@ -85,27 +92,26 @@ export default function Formulario({ navigation }) {
         setIsLoading(false);
       });
 
-      var date = new Date().getDate();
-      var month = new Date().getMonth() + 1;
-      var year = new Date().getFullYear();
-      var fecha = date + "/" + month + "/" + year;
-      let sintomasExisten = sintomas[fecha] ? sintomas[fecha]?.síntomas : false;
-      if (sintomasExisten) {
-        setEspirometria(sintomasExisten.espirometria);
-        setDisneaNoche(sintomasExisten.disneaNoche);
-        setDisneaDia(sintomasExisten.disneaDia);
-        setSaturacion(sintomasExisten.saturacion);
-        setFreqCardiaca(sintomasExisten.freqCardiaca);
-        setDormido(sintomasExisten.dormido);
-        setCaminata(sintomasExisten.caminata);
-        setSalidoCasa(sintomasExisten.salidoCasa);
-        setTos(sintomasExisten.tos);
-        setEmpeoramiento(sintomasExisten.empeoramiento);
-        setHaySintomasEnviados(true);
-      } else {
-        setHaySintomasEnviados(false);
-      }
-   
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    var fecha = date + "/" + month + "/" + year;
+    let sintomasExisten = sintomas[fecha] ? sintomas[fecha]?.síntomas : false;
+    if (sintomasExisten) {
+      setEspirometria(sintomasExisten.espirometria);
+      setDisneaNoche(sintomasExisten.disneaNoche);
+      setDisneaDia(sintomasExisten.disneaDia);
+      setSaturacion(sintomasExisten.saturacion);
+      setFreqCardiaca(sintomasExisten.freqCardiaca);
+      setDormido(sintomasExisten.dormido);
+      setCaminata(sintomasExisten.caminata);
+      setSalidoCasa(sintomasExisten.salidoCasa);
+      setTos(sintomasExisten.tos);
+      setEmpeoramiento(sintomasExisten.empeoramiento);
+      setHaySintomasEnviados(true);
+    } else {
+      setHaySintomasEnviados(false);
+    }
   }
   async function addSymptomsToBBDD() {
     dispatch(
@@ -229,26 +235,43 @@ export default function Formulario({ navigation }) {
                   <Divider width={2} marginTop={20} color="#000080" />
                   <View style={styles.dropdownContainer}>
                     <Text style={{}}>¿Ha realizado la espirometría?: </Text>
-                    <Picker
-                      dropdownIconColor="white"
-                      selectedValue={espirometria.selectedEspirometria}
+                    <View
                       style={{
-                        width: 87,
-                        backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
-                        color: "white",
-                        borderRadius: 8,
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
                       }}
-                      itemStyle={{ height: 50}}
-                      onValueChange={(itemValue, itemIndex) =>
-                        setEspirometria({
-                          ...espirometria,
-                          selectedEspirometria: itemValue,
-                        })
-                      }
                     >
-                      <Picker.Item label="Si" value="Si" />
-                      <Picker.Item label="No" value="No" />
-                    </Picker>
+                      <Picker
+                        dropdownIconColor="white"
+                        selectedValue={espirometria.selectedEspirometria}
+                        style={{
+                          width: 87,
+                          backgroundColor:
+                            Platform.OS === "ios" ? "lightblue" : "#000080",
+                          color: "white",
+                          borderRadius: 8,
+                        }}
+                        itemStyle={{ height: 50 }}
+                        onValueChange={(itemValue, itemIndex) =>
+                          setEspirometria({
+                            ...espirometria,
+                            selectedEspirometria: itemValue,
+                          })
+                        }
+                      >
+                        <Picker.Item label="Si" value="Si" />
+                        <Picker.Item label="No" value="No" />
+                      </Picker>
+                      {Platform.OS === "ios" && (
+                        <FontAwesome5
+                          name="arrows-alt-v"
+                          size={20}
+                          color="black"
+                          style={{ marginLeft: 5, marginRight: -5 }}
+                        ></FontAwesome5>
+                      )}
+                    </View>
                   </View>
                   <TextInput
                     placeholder="Comentarios"
@@ -308,8 +331,8 @@ export default function Formulario({ navigation }) {
                     <View style={styles.dropdownContainer}>
                       <Text>FEV1(%):</Text>
                       <TextInput
-                      placeholder="50"
-                      placeholderTextColor="darkgrey"
+                        placeholder="50"
+                        placeholderTextColor="darkgrey"
                         onChangeText={(text) => {
                           setEspirometria({
                             ...espirometria,
@@ -586,31 +609,46 @@ const Tos = ({ tos, setTos }) => (
       Puntúe de 0 (nada) a {"\n"}10 (tos persistente insoportable) {"\n"}cómo
       fue la tos de hoy:{" "}
     </Text>
-
-    <Picker
-    itemStyle={{ height: 50}}
-      dropdownIconColor="white"
-      selectedValue={tos}
+    <View
       style={{
-        width: 85,
-        backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
-        color: "white",
-        borderRadius: 8,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
       }}
-      onValueChange={(itemValue, itemIndex) => setTos(itemValue)}
     >
-      <Picker.Item label="0" value="0" />
-      <Picker.Item label="1" value="1" />
-      <Picker.Item label="2" value="2" />
-      <Picker.Item label="3" value="3" />
-      <Picker.Item label="4" value="4" />
-      <Picker.Item label="5" value="5" />
-      <Picker.Item label="6" value="6" />
-      <Picker.Item label="7" value="7" />
-      <Picker.Item label="8" value="8" />
-      <Picker.Item label="9" value="9" />
-      <Picker.Item label="10" value="10" />
-    </Picker>
+      <Picker
+        itemStyle={{ height: 50 }}
+        dropdownIconColor="white"
+        selectedValue={tos}
+        style={{
+          width: 85,
+          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+          color: "white",
+          borderRadius: 8,
+        }}
+        onValueChange={(itemValue, itemIndex) => setTos(itemValue)}
+      >
+        <Picker.Item label="0" value="0" />
+        <Picker.Item label="1" value="1" />
+        <Picker.Item label="2" value="2" />
+        <Picker.Item label="3" value="3" />
+        <Picker.Item label="4" value="4" />
+        <Picker.Item label="5" value="5" />
+        <Picker.Item label="6" value="6" />
+        <Picker.Item label="7" value="7" />
+        <Picker.Item label="8" value="8" />
+        <Picker.Item label="9" value="9" />
+        <Picker.Item label="10" value="10" />
+      </Picker>
+      {Platform.OS === "ios" && (
+        <FontAwesome5
+          name="arrows-alt-v"
+          size={20}
+          color="black"
+          style={{ marginLeft: 5, marginRight: -5 }}
+        ></FontAwesome5>
+      )}
+    </View>
   </View>
 );
 const Empeoramiento = ({ empeoramiento, setEmpeoramiento }) => (
@@ -619,49 +657,75 @@ const Empeoramiento = ({ empeoramiento, setEmpeoramiento }) => (
       ¿Ha habido a lo largo del día una{"\n"}situación que le haya producido{" "}
       {"\n"}un empeoramiento clínico?:{" "}
     </Text>
-
-    <Picker
-    itemStyle={{ height: 50}}
-      dropdownIconColor="white"
-      selectedValue={empeoramiento}
-      style={{
-        width: 87,
-        backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
-        color: "white",
-        borderRadius: 8,
-      }}
-      onValueChange={(itemValue, itemIndex) => setEmpeoramiento(itemValue)}
+    <View
+      style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
     >
-      <Picker.Item label="Si" value="Si" />
-      <Picker.Item label="No" value="No" />
-    </Picker>
+      <Picker
+        itemStyle={{ height: 50 }}
+        dropdownIconColor="white"
+        selectedValue={empeoramiento}
+        style={{
+          width: 87,
+          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+          color: "white",
+          borderRadius: 8,
+        }}
+        onValueChange={(itemValue, itemIndex) => setEmpeoramiento(itemValue)}
+      >
+        <Picker.Item label="Si" value="Si" />
+        <Picker.Item label="No" value="No" />
+      </Picker>
+      {Platform.OS === "ios" && (
+        <FontAwesome5
+          name="arrows-alt-v"
+          size={20}
+          color="black"
+          style={{ marginLeft: 5, marginRight: -5 }}
+        ></FontAwesome5>
+      )}
+    </View>
   </View>
 );
 const SalidoCasa = ({ salido, setSalido }) => (
   <View>
     <View style={styles.dropdownContainer}>
-      <Text style={{}}>¿Ha salido de casa?: </Text>
-
-      <Picker
-      itemStyle={{ height: 50}}
-        dropdownIconColor="white"
-        selectedValue={salido.value}
+      <Text>¿Ha salido de casa?: </Text>
+      <View
         style={{
-          borderRadius: 8,
-          width: 87,
-          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
-          color: "white",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
         }}
-        onValueChange={(itemValue, itemIndex) =>
-          setSalido({
-            ...salido,
-            value: itemValue,
-          })
-        }
       >
-        <Picker.Item label="Si" value="Si" />
-        <Picker.Item label="No" value="No" />
-      </Picker>
+        <Picker
+          itemStyle={{ height: 50 }}
+          dropdownIconColor="white"
+          selectedValue={salido.value}
+          style={{
+            borderRadius: 8,
+            width: 87,
+            backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+            color: "white",
+          }}
+          onValueChange={(itemValue, itemIndex) =>
+            setSalido({
+              ...salido,
+              value: itemValue,
+            })
+          }
+        >
+          <Picker.Item label="Si" value="Si" />
+          <Picker.Item label="No" value="No" />
+        </Picker>
+        {Platform.OS === "ios" && (
+          <FontAwesome5
+            name="arrows-alt-v"
+            size={20}
+            color="black"
+            style={{ marginLeft: 5, marginRight: -5 }}
+          ></FontAwesome5>
+        )}
+      </View>
     </View>
     <View style={styles.dropdownContainer}>
       <Text style={{ marginVertical: 10 }}>
@@ -700,32 +764,46 @@ const Disnea = ({ momento, disnea, setDisnea }) => {
   return (
     <View style={styles.dropdownContainer}>
       <Text style={{}}>Grado de disnea por la {momento}: </Text>
-
-      <Picker
-      itemStyle={{ height: 50}}
-
-        dropdownIconColor="white"
-        selectedValue={disnea}
+      <View
         style={{
-          borderRadius: 8,
-          width: 85,
-          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
-          color: "white",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
         }}
-        onValueChange={(itemValue, itemIndex) => setDisnea(itemValue)}
       >
-        <Picker.Item label="0" value="0" />
-        <Picker.Item label="1" value="1" />
-        <Picker.Item label="2" value="2" />
-        <Picker.Item label="3" value="3" />
-        <Picker.Item label="4" value="4" />
-        <Picker.Item label="5" value="5" />
-        <Picker.Item label="6" value="6" />
-        <Picker.Item label="7" value="7" />
-        <Picker.Item label="9" value="8" />
-        <Picker.Item label="8" value="9" />
-        <Picker.Item label="10" value="10" />
-      </Picker>
+        <Picker
+          itemStyle={{ height: 50 }}
+          dropdownIconColor="white"
+          selectedValue={disnea}
+          style={{
+            borderRadius: 8,
+            width: 85,
+            backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+            color: "white",
+          }}
+          onValueChange={(itemValue, itemIndex) => setDisnea(itemValue)}
+        >
+          <Picker.Item label="0" value="0" />
+          <Picker.Item label="1" value="1" />
+          <Picker.Item label="2" value="2" />
+          <Picker.Item label="3" value="3" />
+          <Picker.Item label="4" value="4" />
+          <Picker.Item label="5" value="5" />
+          <Picker.Item label="6" value="6" />
+          <Picker.Item label="7" value="7" />
+          <Picker.Item label="9" value="8" />
+          <Picker.Item label="8" value="9" />
+          <Picker.Item label="10" value="10" />
+        </Picker>
+        {Platform.OS === "ios" && (
+          <FontAwesome5
+            name="arrows-alt-v"
+            size={20}
+            color="black"
+            style={{ marginLeft: 5, marginRight: -5 }}
+          ></FontAwesome5>
+        )}
+      </View>
     </View>
   );
 };
@@ -849,35 +927,51 @@ const Caminata = ({
     )}
     <View style={[styles.dropdownContainer]}>
       <Text>Disnea (escala de BORG): </Text>
-      <Picker
-      itemStyle={{ height: 50}}
-        dropdownIconColor="white"
-        selectedValue={caminata.disnea}
+      <View
         style={{
-          borderRadius: 8,
-          width: 85,
-          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
-          color: "white",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
         }}
-        onValueChange={(itemValue, itemIndex) =>
-          setCaminata({
-            ...caminata,
-            disnea: itemValue,
-          })
-        }
       >
-        <Picker.Item label="0" value="0" />
-        <Picker.Item label="1" value="1" />
-        <Picker.Item label="2" value="2" />
-        <Picker.Item label="3" value="3" />
-        <Picker.Item label="4" value="4" />
-        <Picker.Item label="5" value="5" />
-        <Picker.Item label="6" value="6" />
-        <Picker.Item label="7" value="7" />
-        <Picker.Item label="9" value="8" />
-        <Picker.Item label="8" value="9" />
-        <Picker.Item label="10" value="10" />
-      </Picker>
+        <Picker
+          itemStyle={{ height: 50 }}
+          dropdownIconColor="white"
+          selectedValue={caminata.disnea}
+          style={{
+            borderRadius: 8,
+            width: 85,
+            backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+            color: "white",
+          }}
+          onValueChange={(itemValue, itemIndex) =>
+            setCaminata({
+              ...caminata,
+              disnea: itemValue,
+            })
+          }
+        >
+          <Picker.Item label="0" value="0" />
+          <Picker.Item label="1" value="1" />
+          <Picker.Item label="2" value="2" />
+          <Picker.Item label="3" value="3" />
+          <Picker.Item label="4" value="4" />
+          <Picker.Item label="5" value="5" />
+          <Picker.Item label="6" value="6" />
+          <Picker.Item label="7" value="7" />
+          <Picker.Item label="9" value="8" />
+          <Picker.Item label="8" value="9" />
+          <Picker.Item label="10" value="10" />
+        </Picker>
+        {Platform.OS === "ios" && (
+          <FontAwesome5
+            name="arrows-alt-v"
+            size={20}
+            color="black"
+            style={{ marginLeft: 5, marginRight: -5 }}
+          ></FontAwesome5>
+        )}
+      </View>
     </View>
     <View style={[styles.dropdownContainer, { marginTop: 10 }]}>
       <Text style={{ marginLeft: 0 }}>
@@ -970,25 +1064,40 @@ const Dormido = ({ dormido, setDormido }) => (
     <Divider width={2} marginTop={20} color="#000080" />
     <View style={styles.dropdownContainer}>
       <Text style={{}}>Que tal has dormido del 1 al 5: </Text>
-
-      <Picker
-      itemStyle={{ height: 50}}
-        dropdownIconColor="white"
-        selectedValue={dormido}
+      <View
         style={{
-          borderRadius: 8,
-          width: 85,
-          backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
-          color: "white",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
         }}
-        onValueChange={(itemValue, itemIndex) => setDormido(itemValue)}
       >
-        <Picker.Item label="1" value="1" />
-        <Picker.Item label="2" value="2" />
-        <Picker.Item label="3" value="3" />
-        <Picker.Item label="4" value="4" />
-        <Picker.Item label="5" value="5" />
-      </Picker>
+        <Picker
+          itemStyle={{ height: 50 }}
+          dropdownIconColor="white"
+          selectedValue={dormido}
+          style={{
+            borderRadius: 8,
+            width: 85,
+            backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+            color: "white",
+          }}
+          onValueChange={(itemValue, itemIndex) => setDormido(itemValue)}
+        >
+          <Picker.Item label="1" value="1" />
+          <Picker.Item label="2" value="2" />
+          <Picker.Item label="3" value="3" />
+          <Picker.Item label="4" value="4" />
+          <Picker.Item label="5" value="5" />
+        </Picker>
+        {Platform.OS === "ios" && (
+          <FontAwesome5
+            name="arrows-alt-v"
+            size={20}
+            color="black"
+            style={{ marginLeft: 5, marginRight: -5 }}
+          ></FontAwesome5>
+        )}
+      </View>
     </View>
   </>
 );

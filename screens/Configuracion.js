@@ -198,7 +198,6 @@ export default function Configuracion({ navigation }) {
 }
 
 const ConfigField = ({ icon, text, onPress, accionOnPress, size, heightProp }) => {
-  console.log(heightProp)
   return (
     <TouchableOpacity
       style={[styles.AlertContainer, { height: heightProp }]}

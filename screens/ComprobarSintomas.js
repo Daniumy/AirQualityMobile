@@ -196,7 +196,7 @@ export default function ComprobarSintomas({ navigation }) {
                         backgroundColor: "#000080",
                         alignItems: "center",
                         alignSelf: "center",
-                        width: 100,
+                        width: 150,
                         borderRadius: 10,
                       }}
                       onPress={() => acceptDate()}

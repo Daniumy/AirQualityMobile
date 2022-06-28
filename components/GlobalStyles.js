@@ -6,7 +6,7 @@ const airCardRadius = 10;
 
 export default StyleSheet.create({
   AndroidSafeArea: {
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : StatusBar.currentHeight + 5
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 5 : StatusBar.currentHeight + 7
   },
   SafeAreaBackground: {
    flex: 1,

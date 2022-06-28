@@ -124,7 +124,6 @@ export default function Notificaciones({ navigation }) {
       }
     }
   }, [concentraciones]);
-  console.log(deviceWidth)
   function TwoUnhealthyConcentrations() {
     let amount = 0;
 
@@ -220,7 +219,7 @@ export default function Notificaciones({ navigation }) {
                   titleText={"Si rellenas el diario de síntomas de hoy"}
                   suggestionText={"Daremos alertas sobre ello"}
                   background="#e75480"
-                  height={80}
+                  height={90}
                 />
               )}
               {!hayConcentraciones && (
@@ -276,7 +275,7 @@ export default function Notificaciones({ navigation }) {
                       titleText={"Debido a varios síntomas deficientes"}
                       suggestionText={"¡Asiste a consulta!"}
                       background="#DE2F24"
-                      height={80}
+                      height={90}
                     />
                   )}
                   {concentracionAndOneSymptom && (
@@ -285,7 +284,7 @@ export default function Notificaciones({ navigation }) {
                       titleText={"Debido a síntomas y concentraciones"}
                       suggestionText={"¡Asiste a consulta!"}
                       background="#DE2F24"
-                      height={80}
+                      height={90}
                     />
                   )}
                   {isDisneaDangerous(getHigherDisnea()) && (
@@ -294,7 +293,7 @@ export default function Notificaciones({ navigation }) {
                       titleText={"Debido a su disnea se le recomienda:"}
                       suggestionText={"No salir de casa"}
                       background={colorDisnea(getHigherDisnea())}
-                      height={80}
+                      height={90}
                     />
                   )}
                   {isEspirometriaDangerous(espirometria) && (
@@ -314,7 +313,7 @@ export default function Notificaciones({ navigation }) {
                       titleText={"Debido a su saturación se le recomienda:"}
                       suggestionText={"No salir de casa"}
                       background={colorSaturacion(saturacion)}
-                      height={80}
+                      height={90}
                     />
                   )}
                   {isFreqCardiacaDangerous(freqCardiaca) && (
@@ -372,6 +371,7 @@ const Alerta = ({
             borderBottomWidth: 1,
             marginTop: 10,
             fontSize: fontSize,
+            marginRight: 100,
           }}
         >
           {titleText}

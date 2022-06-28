@@ -21,7 +21,6 @@ import { REACT_APP_MAPVIEW_API } from "@env";
 
 export default function Mapa({ navigation }) {
   const { location } = useSelector((state) => state.GPSReducer);
-  console.log(REACT_APP_MAPVIEW_API +"\n");
   const defaultLocation = {
     latitude: 37.9922399,
     longitude: -1.1306544,

@@ -2,7 +2,7 @@
   "expo": {
     "name": "AireLocal",
     "slug": "AireLocal",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon2.png",
     "userInterfaceStyle": "automatic",
@@ -18,7 +18,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.daniumy.AirQualityApp",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
