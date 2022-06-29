@@ -145,8 +145,8 @@ export default function Formulario({ navigation }) {
   }
   function checkIfCamposIncorrectos() {
     if (
-      !espirometria.comentario ||
-      !espirometria.fvc ||
+      (!espirometria.comentario && espirometria.selectedEspirometria == "Si") ||
+      (!espirometria.fvc && espirometria.selectedEspirometria == "Si") ||
       (!espirometria.fev && espirometria.selectedEspirometria == "Si") ||
       regExp.test(espirometria.fev) ||
       regExp.test(espirometria.fvc) ||

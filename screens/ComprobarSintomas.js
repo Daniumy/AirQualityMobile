@@ -53,7 +53,6 @@ export default function ComprobarSintomas({ navigation }) {
     setAcceptDateButton(false);
     setDatePickerOpen(false);
     getSintomasOfUser(selectedDate);
-
   }
 
   function onDateChangeAndroid(event, selectedDate) {

@@ -78,6 +78,7 @@ export default function AirCardGPS({ setModalError }) {
         );
         setCurrentAddress(address[0]);
       } catch (error) {
+        console.log("hola?");
         removeGPSConcentration();
         setModalError(true);
         return;
@@ -133,9 +134,13 @@ export default function AirCardGPS({ setModalError }) {
     const sintomasDB = await db
       .collection("concentraciones")
       .doc(auth.currentUser.email)
-      .set({
-        concentracion: partialAqis,
-      });
+      .set(
+        {
+          concentracion: partialAqis
+        },
+        { merge: true }
+      )
+      .then(() => console.log("gps updated"));
   }
 
   async function removeGPSConcentration() {
@@ -222,19 +227,19 @@ export default function AirCardGPS({ setModalError }) {
       coIsShownInMg = true;
       pm10 !== undefined
         ? partialAqis.push(pm10.v)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       so2 !== undefined
         ? partialAqis.push(so2.v * 0.286)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       co !== undefined
         ? partialAqis.push(co.v * 0.001 * 10)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       no2 !== undefined
         ? partialAqis.push(no2.v * 0.5)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       o3 !== undefined
         ? partialAqis.push(o3.v * 0.556)
-        : partialAqis.push(undefined);
+        : partialAqis.push("undefined");
       globalAqi = getHigherAqiFromPartialIndexes(partialAqis);
     }
     updateGPSConcentration(partialAqis);
@@ -257,10 +262,7 @@ export default function AirCardGPS({ setModalError }) {
               }
             />
           )}
-          <BottomCard
-            elementos={partialAqis}
-            coInMg={coIsShownInMg}
-          />
+          <BottomCard elementos={partialAqis} coInMg={coIsShownInMg} />
         </View>
       </>
     );
@@ -394,7 +396,7 @@ const Direccion = ({ ciudad, calle }) => (
   </>
 );
 
-const BottomCard = ({ elementos, coInMg}) => {
+const BottomCard = ({ elementos, coInMg }) => {
   let elementoPM10 = <></>;
   let elementoSO2 = <></>;
   let elementoCO = <></>;

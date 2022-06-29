@@ -1,10 +1,18 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyles from "../components/GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import { Divider } from "react-native-elements";
 import HeaderTabs from "../components/HeaderTabs";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import Entypo from "react-native-vector-icons/Entypo";
 import {
   colorDisnea,
   colorEspirometria,
@@ -54,12 +62,13 @@ export default function Notificaciones({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoading2, setIsLoading2] = useState(true);
   const { location } = useSelector((state) => state.GPSReducer);
-  const {symptomsAdded} = useSelector((state) => state.symptomsReducer);
+  const { symptomsAdded } = useSelector((state) => state.symptomsReducer);
 
   function getHigherEspirometria(espirometria) {
     if (!espirometria.fev || !espirometria.fvc) return null;
     return Math.max(espirometria.fev, espirometria.fvc);
   }
+
   useEffect(() => {
     getSintomas();
   }, [symptomsAdded]);
@@ -80,10 +89,11 @@ export default function Notificaciones({ navigation }) {
       .get();
     const concentraciones = concentracionesDB.data();
     setConcentraciones(concentraciones);
-    concentraciones ? setHayConcentraciones(true) : setHayConcentraciones(false);
+    concentraciones
+      ? setHayConcentraciones(true)
+      : setHayConcentraciones(false);
     setIsLoading2(false);
   }
-  
 
   useEffect(() => {
     getConcentraciones();
@@ -186,6 +196,25 @@ export default function Notificaciones({ navigation }) {
     return unhealthyConcentrations;
   }
 
+  function comprobarIfUnaAlerta() {
+    if (
+      haySintomas &&
+      hayConcentraciones &&
+      !isFreqCardiacaDangerous(freqCardiaca) &&
+      !isNivelSueñoDangerous(dormido) &&
+      !isSaturacionDangerous(saturacion) &&
+      !isEspirometriaDangerous(espirometria) &&
+      !isDisneaDangerous(getHigherDisnea()) &&
+      !concentracionAndOneSymptom &&
+      !ThreeSymptomsUnhealthySensgrp() &&
+      !CertainLevelConcentration(AQI_LEVEL.hazardous).length > 0 &&
+      !ThreeConcentrationsUnhealthy() &&
+      !CertainLevelConcentration(AQI_LEVEL.unhealthy).length > 0
+    )
+      return true;
+    else return false;
+  }
+
   if (isLoading || isLoading2) {
     return null;
   } else
@@ -213,6 +242,40 @@ export default function Notificaciones({ navigation }) {
               color="#000080"
             />
             <ScrollView style={{ height: "100%" }}>
+              {comprobarIfUnaAlerta() && (
+                <View
+                  style={[
+                    styles.AlertContainer,
+                    {
+                      height: 90,
+                      backgroundColor: LightenDarkenColor("#90ee90", 40),
+                      textAlign: "center",
+                      textAlignVertical: "center",
+                    },
+                  ]}
+                >
+                  <Entypo
+                    name="thumbs-up"
+                    size={40}
+                    color="black"
+                    style={{
+                      textAlignVertical: "center",
+                      marginHorizontal: 10,
+                      alignSelf: "center",
+                    }}
+                  ></Entypo>
+                  <Text
+                    style={{
+                      fontSize: 35,
+                      textAlign: "center",
+                      textAlignVertical: "center",
+                      marginLeft: 17,
+                    }}
+                  >
+                    ¡No hay alertas!
+                  </Text>
+                </View>
+              )}
               {!haySintomas && (
                 <Alerta
                   fontSize={deviceWidth < 375 ? 13 : 15}
@@ -233,7 +296,7 @@ export default function Notificaciones({ navigation }) {
               )}
               {CertainLevelConcentration(AQI_LEVEL.unhealthy).length > 0 && (
                 <Alerta
-                fontSize={deviceWidth < 375 ? 13 : 15}
+                  fontSize={deviceWidth < 375 ? 13 : 15}
                   titleText={`Por las concentraciones de ${CertainLevelConcentration(
                     AQI_LEVEL.unhealthy
                   ).join(", ")}`}
@@ -246,8 +309,12 @@ export default function Notificaciones({ navigation }) {
               )}
               {ThreeConcentrationsUnhealthy() && (
                 <Alerta
-                fontSize={deviceWidth < 375 ? 13 : 15}
-                titleText={deviceWidth < 375 ? "Por una combinación deficiente \nde concentraciones:" : `Por una combinación deficiente de concentraciones:`}
+                  fontSize={deviceWidth < 375 ? 13 : 15}
+                  titleText={
+                    deviceWidth < 375
+                      ? "Por una combinación deficiente \nde concentraciones:"
+                      : `Por una combinación deficiente de concentraciones:`
+                  }
                   suggestionText={
                     "No salgas sin mascarilla \n\u2022 Cierra ventana \n\u2022 No hagas ejercicio"
                   }
@@ -319,7 +386,9 @@ export default function Notificaciones({ navigation }) {
                   {isFreqCardiacaDangerous(freqCardiaca) && (
                     <Alerta
                       fontSize={14}
-                      titleText={"Por su frecuencia cardíaca \nse le recomienda:"}
+                      titleText={
+                        "Por su frecuencia cardíaca \nse le recomienda:"
+                      }
                       suggestionText={"No salir de casa"}
                       background={colorFreqCardiaca(freqCardiaca)}
                       height={90}
@@ -362,7 +431,11 @@ const Alerta = ({
         name="warning"
         size={40}
         color="white"
-        style={{ textAlignVertical: "center", marginHorizontal: 10, alignSelf:"center" }}
+        style={{
+          textAlignVertical: "center",
+          marginHorizontal: 10,
+          alignSelf: "center",
+        }}
       ></AntDesign>
       <View>
         <Text
@@ -371,7 +444,7 @@ const Alerta = ({
             borderBottomWidth: 1,
             marginTop: 10,
             fontSize: fontSize,
-            marginRight: 100,
+            marginRight: 90,
           }}
         >
           {titleText}
@@ -381,7 +454,7 @@ const Alerta = ({
             marginTop: 5,
             marginLeft: 10,
             fontWeight: "bold",
-            fontSize: fontSize+5,
+            fontSize: fontSize + 5,
           }}
         >
           {"\u2022"} {suggestionText}
