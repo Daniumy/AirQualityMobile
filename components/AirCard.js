@@ -52,8 +52,6 @@ export default function AirCard({ region, withExtra, removeCard }) {
       //Respuestas de los servidores
       const response = await fetch(airqUrl);
       const result = await response.json();
-      console.log("result")
-      console.log(result)
       if (response.ok) {
         setCurrentAqiData(result);
       } else {
@@ -63,8 +61,6 @@ export default function AirCard({ region, withExtra, removeCard }) {
       const response2 = await fetch(weatherUrl);
 
       const result2 = await response2.json();
-      console.log("result2")
-      console.log(result2)
       if (response2.ok) {
         setCurrentWeather(result2);
       } else {

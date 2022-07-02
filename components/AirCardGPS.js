@@ -78,7 +78,6 @@ export default function AirCardGPS({ setModalError }) {
         );
         setCurrentAddress(address[0]);
       } catch (error) {
-        console.log("hola?");
         removeGPSConcentration();
         setModalError(true);
         return;
