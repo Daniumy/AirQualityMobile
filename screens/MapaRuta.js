@@ -125,7 +125,7 @@ export default function MapaRuta({ navigation }) {
               details.geometry.location.lng
             )
           ) {
-            setLocalDestinoRegion({
+            setDestinyGlobalLocation({
               direccion: data.description,
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,

@@ -13,7 +13,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import AppIcon from "../assets/icons/what1.png";
 import { auth, db } from "../firebase";
 import { Picker } from "@react-native-picker/picker";
-import { useDispatch } from "react-redux";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function Registro({ navigation }) {
@@ -21,7 +20,6 @@ export default function Registro({ navigation }) {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [rol, setRol] = useState("Paciente");
-  const dispatch = useDispatch();
   const deviceWidth = Math.round(Dimensions.get("window").width);
 
   const handleRegistro = () => {
@@ -41,7 +39,18 @@ export default function Registro({ navigation }) {
             });
           navigation.navigate("Home");
         })
-        .catch((error) => alert(error.message));
+        .catch((error) => {
+          const mensaje = error.message;
+          if (mensaje.includes("already in use"))
+            alert("El email está siendo usado por otra cuenta");
+          else if (mensaje.includes("badly formatted"))
+            alert("El email está escrito incorrectamente");
+          else if (mensaje.includes("should be at least"))
+            alert("La contraseña debe tener más de 6 caracteres");
+          else if (mensaje.includes("must be 6"))
+            alert("La contraseña debe tener más de 6 caracteres");
+          else alert(mensaje);
+        });
     } else {
       alert("Las contraseñas no coinciden");
     }
@@ -119,7 +128,8 @@ export default function Registro({ navigation }) {
               selectedValue={rol}
               style={{
                 width: 150,
-                backgroundColor: Platform.OS === "ios" ? "lightblue" : "#000080",
+                backgroundColor:
+                  Platform.OS === "ios" ? "lightblue" : "#000080",
                 color: "white",
                 borderRadius: 8,
               }}
@@ -192,7 +202,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderColor: "#000080",
     borderWidth: 1,
-    color: "green",
+    color: "black",
   },
   button: {
     backgroundColor: "#000080",

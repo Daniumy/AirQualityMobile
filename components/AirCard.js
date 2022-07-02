@@ -47,38 +47,43 @@ export default function AirCard({ region, withExtra, removeCard }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
 
+  async function fetchData(weatherUrl, airqUrl) {
+    try {
+      //Respuestas de los servidores
+      const response = await fetch(airqUrl);
+      const result = await response.json();
+      console.log("result")
+      console.log(result)
+      if (response.ok) {
+        setCurrentAqiData(result);
+      } else {
+        setErrorMessage(result.message);
+      }
+
+      const response2 = await fetch(weatherUrl);
+
+      const result2 = await response2.json();
+      console.log("result2")
+      console.log(result2)
+      if (response2.ok) {
+        setCurrentWeather(result2);
+      } else {
+        setErrorMessage(result2.message);
+      }
+    } catch (error) {
+      alert(
+        "Lo sentimos, ha ocurrido un error. Vuelva a intentarlo más tarde."
+      );
+      console.log(error);
+    }
+  }
+  
   useEffect(() => {
     const airqUrl = `${BASE_AIRQ_URL}:${region.latitude};${region.longitude}/?token=${AIRQ_API_KEY}`;
     const weatherUrl = `${BASE_WEATHER_URL}lat=${region.latitude}&lon=${region.longitude}&units=metric&appid=${WEATHER_API_KEY}`;
-    async function fetchData() {
-      try {
-        //Respuestas de los servidores
-        const response = await fetch(airqUrl);
-        const result = await response.json();
-        if (response.ok) {
-          setCurrentAqiData(result);
-        } else {
-          setErrorMessage(result.message);
-        }
-
-        const response2 = await fetch(weatherUrl);
-
-        const result2 = await response2.json();
-
-        if (response2.ok) {
-          setCurrentWeather(result2);
-        } else {
-          setErrorMessage(result2.message);
-        }
-      } catch (error) {
-        alert(
-          "Lo sentimos, ha ocurrido un error. Vuelva a intentarlo más tarde."
-        );
-        console.log(error);
-      }
-    }
-    fetchData();
+    fetchData(weatherUrl, airqUrl);
   }, []);
+
 
   function getHigherAqiFromPartialIndexes(partialIndexes) {
     let higherAqi = 0;
