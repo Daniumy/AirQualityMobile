@@ -65,11 +65,13 @@ export default function Mapa({ navigation }) {
   }
   function añadirFavorito(regionLocal) {
     let repetido = false;
+    
     let direccion = regionLocal.direccion;
     let aux = direccion.split(".");
     let direccionModificada = aux.join("");
     let aux2 = direccionModificada.split("/");
     let direccionModificada2 = aux2.join("-");
+
     regions.map((region, index) => {
       if (region.localizacion.direccion === direccionModificada2)
         repetido = true;

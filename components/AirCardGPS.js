@@ -78,7 +78,6 @@ export default function AirCardGPS({ setModalError }) {
         );
         setCurrentAddress(address[0]);
       } catch (error) {
-        console.log("hola?");
         removeGPSConcentration();
         setModalError(true);
         return;
@@ -88,21 +87,16 @@ export default function AirCardGPS({ setModalError }) {
 
   useEffect(() => {
     if (currentLocation !== null) {
-      const weatherUrl = `${BASE_WEATHER_URL}lat=${currentLocation.coords.latitude}&lon=${currentLocation.coords.longitude}&units=metric&appid=${WEATHER_API_KEY}`;
-      const airqUrl = `${BASE_AIRQ_URL}:${currentLocation.coords.latitude};${currentLocation.coords.longitude}/?token=${AIRQ_API_KEY}`;
+      console.log(currentLocation.coords.latitude);
+      console.log(currentLocation.coords.longitu);
+      const weatherUrl = `${BASE_WEATHER_URL}lat=${currentLocation.coords.latitude}
+        &lon=${currentLocation.coords.longitude}&units=metric&appid=${WEATHER_API_KEY}`;
+      const airqUrl = `${BASE_AIRQ_URL}:${currentLocation.coords.latitude};
+        ${currentLocation.coords.longitude}/?token=${AIRQ_API_KEY}`;
+
       fetchData(weatherUrl, airqUrl);
     }
   }, [currentLocation]);
-
-  function getHigherAqiFromPartialIndexes(partialIndexes) {
-    let higherAqi = 0;
-    partialIndexes.forEach((index) => {
-      if (index > higherAqi) {
-        higherAqi = index;
-      }
-    });
-    return higherAqi;
-  }
 
   async function fetchData(weatherUrl, airqUrl) {
     try {
@@ -110,6 +104,7 @@ export default function AirCardGPS({ setModalError }) {
       const response = await fetch(airqUrl);
       const result = await response.json();
       if (response.ok) {
+        console.log("WTF1")
         setCurrentAqiData(result);
       } else {
         setErrorMessage(result.message);
@@ -122,12 +117,23 @@ export default function AirCardGPS({ setModalError }) {
       if (response2.ok) {
         setCurrentWeather(result2);
       } else {
+        console.log("WTF")
         setErrorMessage(result2.message);
       }
       setFetchingError(false);
     } catch (error) {
       setFetchingError(true);
     }
+  }
+
+  function getHigherAqiFromPartialIndexes(partialIndexes) {
+    let higherAqi = 0;
+    partialIndexes.forEach((index) => {
+      if (index > higherAqi) {
+        higherAqi = index;
+      }
+    });
+    return higherAqi;
   }
 
   async function updateGPSConcentration(partialAqis) {

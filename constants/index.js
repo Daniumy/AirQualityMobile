@@ -1,7 +1,7 @@
 import icons from "./icons"
 import images from "./images";
 import { COLORS, SIZES, FONTS } from "./theme";
-import GOOGLE_API_KEY from "./maps"
+
 
 //Categorias del Indice de Calidad del Aire
 const AQI_LEVEL = {
@@ -419,4 +419,4 @@ const information = [
 
 
 
-export { icons, images,AQI_LEVEL_ELEMENT, COLORS, SIZES, AQI_FACE, FONTS, GOOGLE_API_KEY, AQI_LEVEL, HEALTH_ADVICE, AQI_ADVICES, MAP_MODE, information };
+export { icons, images,AQI_LEVEL_ELEMENT, COLORS, SIZES, AQI_FACE, FONTS, AQI_LEVEL, HEALTH_ADVICE, AQI_ADVICES, MAP_MODE, information };

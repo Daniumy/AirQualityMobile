@@ -146,7 +146,6 @@ export default function ComprobarSintomas({ navigation }) {
                   <View style={styles.searchContainer}>
                     <TextInput
                       placeholder="Buscar paciente"
-                      placeholderTextColor="darkgrey"
                       style={styles.searchInput}
                       onChangeText={(text) => searchText(text)}
                       value={inputValue}

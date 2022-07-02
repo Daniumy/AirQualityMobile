@@ -65,6 +65,7 @@ export default function MapaRuta({ navigation }) {
     latitudeDelta: 0.015,
     longitudeDelta: 0.015,
   });
+
   function getOptimalRoute(origin, destination, isGPSLocationInsideArea1) {
     if (!isGPSLocationInsideArea1) {
       const waypoints = calculateRoute(defaultLocation, destination);
@@ -125,7 +126,7 @@ export default function MapaRuta({ navigation }) {
               details.geometry.location.lng
             )
           ) {
-            setLocalDestinoRegion({
+            setDestinyGlobalLocation({
               direccion: data.description,
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
