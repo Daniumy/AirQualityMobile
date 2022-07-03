@@ -35,6 +35,7 @@ import {
 import { REACT_APP_WEATHER_API, REACT_APP_AIRQ_API } from "@env";
 import { isInsideArea1, isInsideArea2 } from "../utils/optimalRouteFunctions";
 
+const deviceWidth = Math.round(Dimensions.get("window").width);
 const WEATHER_API_KEY = REACT_APP_WEATHER_API;
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
 const AIRQ_API_KEY = REACT_APP_AIRQ_API;
