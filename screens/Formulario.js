@@ -148,8 +148,8 @@ export default function Formulario({ navigation }) {
       (!espirometria.comentario && espirometria.selectedEspirometria == "Si") ||
       (!espirometria.fvc && espirometria.selectedEspirometria == "Si") ||
       (!espirometria.fev && espirometria.selectedEspirometria == "Si") ||
-      regExp.test(espirometria.fev) ||
-      regExp.test(espirometria.fvc) ||
+      (regExp.test(espirometria.fev) && espirometria.fev !== "" && espirometria.selectedEspirometria == "Si") ||
+      (regExp.test(espirometria.fvc) && espirometria.fvc !== "" && espirometria.selectedEspirometria == "Si") ||
       (!espirometria.noRealizadaMotivo &&
         espirometria.selectedEspirometria == "No")
     ) {
