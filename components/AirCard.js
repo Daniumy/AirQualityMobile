@@ -39,7 +39,6 @@ const WEATHER_API_KEY = REACT_APP_WEATHER_API;
 const BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
 const AIRQ_API_KEY = REACT_APP_AIRQ_API;
 const BASE_AIRQ_URL = "https://api.waqi.info/feed/geo";
-const deviceWidth = Math.round(Dimensions.get("window").width);
 
 export default function AirCard({ region, withExtra, removeCard }) {
   const [extraActivo, setExtraActivo] = useState(false);
@@ -175,7 +174,7 @@ export default function AirCard({ region, withExtra, removeCard }) {
         <View
           style={[
             GlobalStyles.AirCardContainer,
-            { height: region.direccion.length >= 61 ? 320 : 292 },
+            { height: region.direccion.length >= 61 ? 330 : 320 },
           ]}
         >
           <TopCard
